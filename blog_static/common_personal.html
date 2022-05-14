@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="favicon.ico" >
+  <title>的个人主页 - Z社区</title>
+  <link rel="stylesheet" href="css/semantic.min.css">
+  <link rel="stylesheet" href="css/element-ui.css">
+  <link rel="stylesheet" href="dist/components/icon.min.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <div id="personal-container">
+    <div class="nav-flexed">
+        <nav class="ui attached segment m-navpd">
+            <div class="ui container">
+                <div class="ui inverted secondary menu stackable m-navpd-child">
+                    <a href="index.html">
+                        <img src="images/del/logo.png" class="m-logo" title="ZBLOG首页">
+                    </a>
+                    <a href="index.html" class="item m-item m-mobile-hide">首页</a>
+                    <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="选择你感兴趣的文章类型">文章分类</a>
+                    <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="热门活动">本站活动</a>
+                    <div class="right item m-item m-mobile-hide" style="height: 50px !important;">
+                        <form class="ui form" method="get" target="_blank" action="">
+                            <div class="ui icon input">
+                                <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
+                                <i class="search link icon"></i>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="m-login-commd">
+                       <ul v-if="userInfo.isLogin">
+                           <li style="margin-right: 0;">
+                            <el-dropdown>
+                                <a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" title="个人中心">
+                                    <el-avatar :size="35" :src="'images/avatar/'+userInfo.avatar"></el-avatar>
+                                </a>
+                                <el-dropdown-menu slot="dropdown">
+                                        <div class="m-login-userInfo"> 
+                                            <el-dropdown-item disabled>
+                                                <span class="m-wn">
+                                                    {{userInfo.wName}}
+                                                    <i :class="[userInfo.isMale?'icon man':'icon woman']" :style="{'color':(userInfo.isMale?'skyblue':'#fe99ab')}"></i>
+                                                </span>
+                                            </el-dropdown-item>
+                                        </div> 
+                                        <div class="m-login-userInfo"> 
+                                            <el-dropdown-item disabled>
+                                               <ul class="m-af">
+                                                   <li>文章: {{userInfo.articleNum}}</li>
+                                                   <li>粉丝: {{userInfo.fans}}</li>
+                                               </ul> 
+                                            </el-dropdown-item>
+                                        </div>  
+                                </el-dropdown-menu>
+                              </el-dropdown>
+                           </li>
+                           <li style="margin-right: 2em; width: 4em;"><a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" style="color: black;">个人中心</a></li>
+                           <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" target="_blank" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                           <li class="m-lg" @click="logout">退出</li>
+                       </ul> 
+                        <ul v-else>
+                            <li><a href="login.html" class="m-login" title="登录">登录 / </a></li>
+                            <li><a href="register.html" class="m-register" title="去注册">注册</a></li>
+                            <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <a id="m-show-nav" href="javascript:;" class="ui inverted icon button m-top-right m-mobile-show">
+                <i class="sidebar icon"></i>
+            </a>
+        </nav>
+    </div>
+   
+    <!-- 主体部分 -->
+    <div class="m-personal-content">
+      <div class="ui grid">
+        <div class="twelve wide column">
+          <div class="ui segment">
+            <div class="m-personal">
+              <div>
+                <img :src="'images/avatar/'+currentUserInfo.writerAvatar" alt="用户头像" class="ui circular image" width="60">
+              </div>
+              <div>
+                <p class="m-pn">
+                    {{currentUserInfo.writerName}}
+                    <i :class="[currentUserInfo.isMale?'icon man':'icon woman']" :style="{'color':(currentUserInfo.isMale?'skyblue':'#fe99ab')}"></i>
+                </p>
+                <ui class="m-personal-access">
+                  <li><span> {{currentUserInfo.allViews}} 被访问 </span></li>
+                  <li><span> {{currentUserInfo.articleNum}} 文章 </span></li>
+                  <li><span> {{currentUserInfo.fans}} 粉丝 </span></li>
+                  <li><span> {{currentUserInfo.allLikeNums}} 点赞 </span></li>
+                </ui>
+              </div>
+              <div>
+                <button class="ui green button">私信TA</button>
+                <button class="ui blue button">+关注</button>
+              </div>
+            </div>
+          </div>
+          <div class="ui top attached tabular menu">
+            <div class="active item">文章</div>
+            <div class="item">热门</div>
+          </div>
+          <div class="ui bottom attached active tab segment">
+              <template v-for="a in currentUserArticle" :key="a.did">
+                <div class="ui attached segment m-padding-small">
+                <div class="ui mobile reversed stackable grid">
+                <div class="ten wide column" style="padding-right: 0 !important;">
+                <a :href="'blog.html?bid='+a.did+'&safasd='+Math.random()" target="_blank">
+                    <h3 class="ui header m-overflow-blog-title">{{a.title}}</h3>
+                </a>
+                    <p class="m-blogtext m-overflow-blog">{{a.outline}}</p>
+                <div class="ui mini m-infobox">
+                    <div class="m-info">
+                        <div class="m-avatar">
+                            <a href="javascript:;" target="_blank">
+                                <img :src="'images/avatar/'+currentUserInfo.writerAvatar" class="ui avatar image" alt="">
+                                <span> {{currentUserInfo.writerName}} </span>
+                            </a>
+                        </div>
+                        <div class="m-calendar">
+                            <i class="calendar icon"></i> <span>{{dateFormat(a.writeTime, true)}}</span>
+                        </div>
+                        <div class="m-eye">
+                            <i class="thumbs up icon"></i> <span>{{a.likeNum}}</span>
+                        </div>
+                        <div class="m-eye">
+                            <i class="eye icon"></i> <span>{{a.views}}</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="one wide column" style="width: 10px !important;"></div>
+                <div class="five wide column">
+                <div>
+                    <a :href="'blog.html?bid='+a.did+'&safasd='+Math.random()" target="_blank">
+                        <img :src="'images/fp/'+a.firstPicture" class="ui image rounded m-blog-img-size" alt="">
+                    </a>
+                </div>
+                </div>
+                </div>
+                </div>
+              </template>
+          </div>
+        </div>
+        <div class="four wide column">
+          <div class="ui segment">
+            <p class="m-jointime">TA于 {{dateFormat(currentUserInfo.registerTime, false)}} 加入ZBLOG</p>
+            <p>出生日期: <span class="m-jointime">{{dateFormat(currentUserInfo.writerBirthday, false)}}</span> </p>
+            <p>邮箱地址: <span class="m-jointime">{{currentUserInfo.mail}}</span> </p>
+            <p>个人介绍：</p>
+            <p class="m-jointime" v-if="currentUserInfo.writerIntroduce==''||currentUserInfo.writerIntroduce==null">ta什么都没有留下哦...</p>
+            <p class="m-jointime" v-else>{{currentUserInfo.writerIntroduce}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="ui inverted vertical segment m-footer">
+        <div class="ui center aligned container">
+            <div class="ui inverted divided grid mobile reversed stackable">
+                <div class="three wide column">
+                    <div class="ui inverted list">
+                        <div class="item">
+                            <img class="ui rounded image" src="images/del/wechat.png" alt="联系我" style="width: 80px !important; height: 80px !important;">
+                        </div>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <h4 class="ui inverted header">联系我</h4>
+                    <p class="copyright">Gitee : germcell</p>
+                    <p class="copyright right aligned">WeChat : z_Cricket</p>
+                </div>
+                <div class="three wide column">
+                    <h4 class="ui inverted header">本站声明</h4>
+                    <p class="copyright">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                </div>
+                <div class="seven wide column">
+                    <h4 class="ui inverted header">开发日志</h4>
+                    <p class="copyright">1.xxxxxxxx</p>
+                </div>
+            </div>
+            <div class="ui inverted section divider"></div>
+            <p class="copyright">Copyright &copy; 2022</p>
+            <p class="copyright">https://gitee.com/germcell/blog.git</p>
+        </div>
+    </footer>
+  </div>
+
+  <script src="js/my/base.js"></script>
+  <script src="js/vue.min.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/semantic.min.js"></script>
+  <script src="js/element-ui.js"></script>
+  <script src="js/my/two.js"></script>
+  <script src="js/my/cookie_utils.js"></script>
+  <script src="js/axios.min.js"></script>
+  <script src="js/my/one.js"></script>
+</body>
+</html>

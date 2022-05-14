@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" >
+    <title>发布、编辑博客</title>
+    <link rel="stylesheet" href="css/semantic.min.css">
+    <link rel="stylesheet" href="css/element-ui.css">
+    <link rel="stylesheet" href="dist/components/icon.min.css">
+    <link rel="stylesheet" href="lib/editormd/css/editormd.min.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <div id="blogadd-container">
+    <div class="nav-flexed">
+      <nav class="ui attached segment m-navpd">
+          <div class="ui container">
+              <div class="ui inverted secondary menu stackable m-navpd-child">
+                  <a href="index.html">
+                      <img src="images/del/logo.png" class="m-logo" title="ZBLOG首页">
+                  </a>
+                  <a href="index.html" class="item m-item m-mobile-hide">首页</a>
+                  <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="选择你感兴趣的文章类型">文章分类</a>
+                  <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="热门活动">本站活动</a>
+                  <div class="right item m-item m-mobile-hide" style="height: 50px !important;">
+                      <form class="ui form" method="get" target="_blank" action="" th:action="@{/blog/condition/page/1}">
+                          <div class="ui icon input">
+                              <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
+                              <i class="search link icon"></i>
+                          </div>
+                      </form>
+                  </div>
+                  <div class="m-login-commd">
+                     <ul v-if="isLogin">
+                         <li style="margin-right: 0;">
+                          <el-dropdown>
+                              <a :href="'private_personal.html?uid='+loginUserID" title="个人中心">
+                                  <el-avatar :size="35" :src="'images/avatar/'+avatar"></el-avatar>
+                              </a>
+                              <el-dropdown-menu slot="dropdown">
+                                      <div class="m-login-userInfo"> 
+                                          <el-dropdown-item disabled>
+                                              <span class="m-wn">
+                                                  {{wName}}
+                                                  <i :class="[isMale?'icon man':'icon woman']" :style="{'color':(isMale?'skyblue':'#fe99ab')}"></i>
+                                              </span>
+                                          </el-dropdown-item>
+                                      </div> 
+                                      <div class="m-login-userInfo"> 
+                                          <el-dropdown-item disabled>
+                                             <ul class="m-af">
+                                                 <li>文章: {{articleNum}}</li>
+                                                 <li>粉丝: {{fans}}</li>
+                                             </ul> 
+                                          </el-dropdown-item>
+                                      </div>  
+                              </el-dropdown-menu>
+                            </el-dropdown>
+                         </li>
+                         <li style="margin-right: 2em; width: 4em;"><a :href="'private_personal.html?uid='+loginUserID" style="color: black;">个人中心</a></li>
+                         <li class="m-write-hover" title="开始记录吧"><a class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                         <li class="m-lg" @click="logout">退出</li>
+                     </ul> 
+                      <ul v-else>
+                          <li><a href="login.html" class="m-login" title="登录">登录 / </a></li>
+                          <li><a href="register.html" class="m-register" title="去注册">注册</a></li>
+                          <li class="m-write-hover" title="开始记录吧"><a class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+          <a id="m-show-nav" href="javascript:;" class="ui inverted icon button m-top-right m-mobile-show">
+              <i class="sidebar icon"></i>
+          </a>
+      </nav>
+    </div>
+     <!-- 主体内容 -->
+     <div class="m-index-content" style="padding-top: 7em !important;">
+      <div class="ui container">
+          <form id="blogEditForm" class="ui form" method="post" enctype="multipart/form-data" style="z-index: 1999;">
+              <div class="required field">
+                  <div class="ui right labeled input">
+                      <!-- 标题编辑 -->
+                      <input type="text" placeholder="标题" name="title" v-model="addBlog.title">
+                      <!-- 文章形式编辑 -->
+                      <div class="ui dropdown left pointing orange label">
+                          <input ref="crTipId" type="hidden" name="crTipId" value="1">
+                          <div class="text">原创</div>
+                          <i class="dropdown left icon"></i>
+                          <div class="menu">
+                              <template v-for="cr in copyrights" :key="cr.crId">
+                                <div class="item" :data-value="cr.crTipId">{{cr.crTip}}</div>
+                              </template>
+                          </div>
+                      </div>
+                    </div>
+              </div>
+              <!-- 文章内容编辑 -->
+              <div class="required field">
+                  <div id="m-editormd">
+                      <textarea ref="text" placeholder="内容" name="content" style="display: none;"></textarea>
+                  </div>
+              </div>
+              <!-- 文章封面编辑 -->
+              <div class="field hide-show">
+                  <div class="ui left labeled input">
+                      <label class="ui black label">封面</label>
+                      <input ref="fp" type="file" name="firstPictureFile">
+                  </div>
+              </div>
+              <!-- 文章分类、个性化编辑 -->
+              <div class="inline fields hide-show">
+                  <div class="field">
+                      <div ref="cids" class="ui left labeled input">
+                          <label for="" class="ui black label">分类</label>
+                          <select class="ui search dropdown">
+                            <option value="">选择/搜索</option>
+                            <template v-for="c in categories" :key="c.cid">
+                                <option :data-value="c.cid">{{c.name}}</option>
+                            </template>
+                        </select>
+                      </div>
+                  </div>
+                  <div class="field">
+                      <div class="ui checkbox">
+                          <input type="checkbox" id="isAppreciate" name="isAppreciate" v-model="addBlog.isAppreciate">
+                          <label for="isAppreciate">开启赞赏</label>
+                      </div>
+                  </div>
+                  <div class="field">
+                      <div class="ui checkbox">
+                          <input type="checkbox" id="isComment" name="isComment" v-model="addBlog.isComment">
+                          <label for="isComment">开启留言</label>
+                      </div>
+                  </div>
+                  <!--   TODO : 转载声明-->
+                  <!-- <div class="field">
+                      <div class="ui checkbox">
+                          <input type="checkbox" id="isReprint" name="isReprint" v-model="addBlog.isReprint">
+                          <label for="isReprint">转载声明</label>
+                      </div>
+                  </div> -->
+              </div>
+        
+              <!-- 操作按钮 -->
+              <div class="ui container right aligned">
+                  <button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
+                  <template v-if="currentEditArticleId==null">
+                      <button type="button" class="ui red button" id="blog-draft-btn" @click="add(2)">保存草稿</button>
+                  </template>
+                  <button type="button" class="ui positive button" id="blog-publish-btn" @click="add(1)">发布</button>
+              </div>
+          </form>
+
+      </div>
+  </div>
+  </div>
+
+    <!-- ---------------- js --------------------------------------------------------------------------------------- -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/semantic.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="lib/editormd/editormd.min.js"></script>
+    <script src="js/my/base.js"></script>
+    <script src="js/element-ui.js"></script>
+    <script src="js/my/cookie_utils.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/my/one.js"></script>
+
+    <script type="text/javascript">
+        var contentEditor;
+        $(function() {
+             /*--------初始化markdown编辑器---------*/  
+             contentEditor = editormd("m-editormd", {
+                 placeholder: '开始编辑...',
+                 width: '100%',
+                 height: 500,
+                 emoji: true,
+                 syncScrolling: "single",
+                 // 此路径为editor编辑器需要的lib目录，直接使用相对路径，如果配置了资源访问路径，则需加上
+                 path: "lib/editormd/lib/",
+                 imageUpload: true,
+                 imageFormats: ["jpg", "jpeg", "png"],
+                 crossDomainUpload : true,
+                 imageUploadURL: baseUrl+"/v2/article/editormd/images",
+                 uploadCallbackURL : "http://127.0.0.1:5500/callback.html",
+                 onload: function () {
+                 },
+                 onfullscreen : function() {
+                    $('.hide-show').css('display', 'none')
+                },
+                onfullscreenExit : function() {
+                    $('.hide-show').css('display', 'flex')
+                }
+             }); 
+
+             $('.ui.dropdown').dropdown();
+        })
+    </script>
+   
+    
+</body>
+</html>

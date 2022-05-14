@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="short icon" th:href="@{/res/favicon.ico}">
+    <title>error</title>
+    <style>
+        .wrapper {
+            margin: 5em 5em 5em 15em;
+        }
+        .btn {
+            margin-top: 5em;
+        }
+        button {
+            width: 70px;
+            height: 35px;
+            border: 0px;
+            border-radius: 5px;
+            background-color: rgba(189, 189, 189, .2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <img src="images/del/error.png" th:src="@{/res/images/error.png}" style="width: 70px; height: 70px;">
+        <h3>500</h3>
+        <p style="color: gray;">服务器正忙，请稍后再试</p>
+        <div class="btn">
+            <button onclick="window.history.go(-1)">返回</button>
+        </div>
+    </div>
+
+<!--    <div th:utext="'&lt;' + '!&#45;&#45;'" th:remove="tag"></div>-->
+<!--        <p th:remove="tag">-->
+<!--            error页面作为controller发生异常时跳转的页面， 下面的详细信息不会被显示，可打开页面源码查看具体错误信息-->
+<!--        </p>-->
+<!--    <div th:text="'&#45;&#45;&gt;'" th:remove="tag"></div>-->
+<!--    <div>-->
+<!--        <div th:utext="'&lt;' + '!&#45;&#45;'" th:rmove="tag"></div>-->
+<!--        <div th:utext="'Failed Request URL : ' + ${errorURL}" th:remove="tag"></div>-->
+<!--        <div th:utext="'Exception message : ' + ${exception.message}" th:remove="tag"></div>-->
+<!--        <ul th:remove="tag">-->
+<!--            <li th:each="st : ${exception.stackTrace}" th:remove="tag"><span th:utext="${st}" th:remove="tag"></span></li>-->
+<!--        </ul>-->
+<!--        <div th:text="'&#45;&#45;&gt;'" th:remove="tag"></div>-->
+<!--    </div>-->
+
+
+</body>
+</html>

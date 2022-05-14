@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" >
+    <title>文章分类 - Z社区</title>
+    <link rel="stylesheet" href="css/semantic.min.css">
+    <link rel="stylesheet" href="dist/components/icon.min.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div id="category-container">
+        <div class="nav-flexed">
+            <nav class="ui attached segment m-navpd">
+                <div class="ui container">
+                    <div class="ui inverted secondary menu stackable m-navpd-child">
+                        <a href="index.html">
+                            <img src="images/del/logo.png" class="m-logo" title="ZBLOG首页">
+                        </a>
+                        <a href="javascript:void(0);" class="item m-item m-mobile-hide" th:classappend="${n==1} ? 'active'" th:href="@{/blog/index/}" title="最新发布的文章">最新发布</a>
+                        <a href="javascript:void(0);" class="item m-item m-mobile-hide" th:classappend="${n==2} ? 'active'" th:href="@{/blog/category/1/}" title="博文分类">分类</a>
+                        <div class="right item m-item m-mobile-hide" style="height: 50px !important;">
+                            <form class="ui form" method="get" target="_blank" action="" th:action="@{/blog/condition/page/1}">
+                                <div class="ui icon input">
+                                    <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
+                                    <i class="search link icon"></i>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="m-login-commd">
+                            <ul>
+                                <li><a href="login.html" class="m-login" title="登录">登录 / </a></li>
+                                <li><a href="register.html" class="m-register" title="去注册">注册</a></li>
+                                <li class="m-write-hover" title="记录你的日常、学习"><a class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <a id="m-show-nav" href="javascript:;" class="ui inverted icon button m-top-right m-mobile-show">
+                    <i class="sidebar icon"></i>
+                </a>
+            </nav>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="m-index-content" style="padding-bottom: 5em !important;">
+            <!-- 分类数量 -->
+            <div class="ui top blue attached segment" style="margin-bottom: 10px;">
+                <div class="ui two column grid">
+                    <div class="column">
+                        <h3 class="ui blue header">文章类别</h3>
+                    </div>
+                    <div class="column right aligned">
+                        共 <span class="blogCount" th:text="${listCategories.size() != 0 ? listCategories.size() : 0}">14</span> 个分类
+                    </div>
+                </div>
+            </div>
+            <div class="ui grid">
+                <!-- 左边分类列表 -->
+                <div class="four wide column">
+                    <div class="ui segments" th:if="${listCategories.size() != 0}">
+                        <!-- 分类信息显示模板 -->
+                        <a href="javascript:;">
+                            <div class="ui segment m-category">
+                                <h4 class="ui image header">
+                                    <img src="images/category/java.jpg" class="ui large rounded image">
+                                    <div class="content"><span>Java</span>
+                                        <div class="sub header">共20篇文章</div>
+                                    </div>
+                                </h4>
+                            </div>
+                        </a>
+                        <a href="javascript:;">
+                            <div class="ui segment m-category">
+                                <h4 class="ui image header">
+                                    <img src="images/category/springboot.png" class="ui large rounded image">
+                                    <div class="content"> <span>SpringBoot</span> 
+                                        <div class="sub header">共10篇文章</div>
+                                    </div>
+                                </h4>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- 右边博客列表 -->
+                <div class="twelve wide column">
+                    <div class="ui segments">
+                        <div class="ui segment">
+                            <div class="ui mobile reversed stackable grid">
+                                <div class="twelve wide column">
+                                    <a href="#" target="_blank">
+                                        <h3 class="ui header">你真正的理解财富自由吗?</h3>
+                                    </a>
+                                    <p class="m-blogtext">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的...</p>
+                                    <!-- 自定义flex布局 -->
+                                    <div class="ui mini m-infobox">
+                                        <div class="m-info">
+                                            <div class="m-avatar">
+                                                <a href="#" target="_blank">
+                                                    <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="">
+                                                    <span> Marry </span>
+                                                </a>
+                                            </div>
+                                            <div class="m-calendar">
+                                                <i class="calendar icon"></i> <span>2022.2.18</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="thumbs up icon"></i> <span>2321</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="eye icon"></i> <span>232</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four wide column">
+                                    <a href="#" target="_blank">
+                                        <img src="./images/del/del_bj2.jpg" class="ui image rounded" alt="blogimg">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- TODO 需添加分页 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="ui inverted vertical segment m-footer">
+            <div class="ui center aligned container">
+                <div class="ui inverted divided grid mobile reversed stackable">
+                    <div class="three wide column">
+                        <div class="ui inverted list">
+                            <div class="item">
+                                <img class="ui rounded image" src="images/del/wechat.png" alt="联系我" style="width: 80px !important; height: 80px !important;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="three wide column">
+                        <h4 class="ui inverted header">联系我</h4>
+                        <p class="copyright">Gitee : germcell</p>
+                        <p class="copyright right aligned">WeChat : z_Cricket</p>
+                    </div>
+                    <div class="three wide column">
+                        <h4 class="ui inverted header">本站声明</h4>
+                        <p class="copyright">SpringBoot入门学习，记录开发过程中遇到的bug，问题，以及解决的方法，都会以博客的形式记录在此站</p>
+                    </div>
+                    <div class="seven wide column">
+                        <h4 class="ui inverted header">开发日志</h4>
+                        <p class="copyright">1.xxxxxxxx</p>
+                    </div>
+                </div>
+                <div class="ui inverted section divider"></div>
+                <p class="copyright">Copyright &copy; 2022</p>
+                <p class="copyright">https://gitee.com/germcell/blog.git</p>
+            </div>
+        </footer>
+    </div>
+
+<!-- ---------------- js ---------------------------------------------------------------------------------- -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/semantic.min.js"></script>
+    <script src="js/front.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            categoryActive();
+            /* 为当前被选中分类添加样式 */
+            function categoryActive() {
+                // var categoryCid = $('#categoryContent').data('categorycid');
+                // FIXME 当分类下无内容时，获取不到博客分类id，导致不能添加选中样式
+                var blogCid = $('#blogContent').data('blogcid');
+                console.log($('.m-categoryContent'))
+                $('.m-categoryContent').each(function (i, ele) {
+                    if ($(ele).data('categorycid') == blogCid) {
+                        $(ele).addClass('m-category-active');
+                    }
+                });
+            }
+        })
+    </script>
+
+</body>
+</html>

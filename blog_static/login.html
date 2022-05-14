@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/element-ui.css">
+  <link rel="stylesheet" href="./css/index2.css">
+  <title>登录-ZBLOG</title>
+  <style media="all">
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="login-container" class="m-login-content">
+    <div class="m-login">
+      <h3>邮箱登录</h3> 
+      <p class="tips" style="top: 4.6rem;">{{msg}}</p>
+      <div class="m-login-up">
+        <el-input placeholder="邮箱地址" v-model="loginData.mail" clearable></el-input>
+      </div>
+      <div class="m-login-up">
+        <el-input placeholder="密码" v-model="loginData.pwd" show-password maxlength="40"></el-input>
+      </div>
+      <div class="m-login-up" style="padding-top: 0;">
+        <a href="javascript:;" class="m-forgetpwd">忘记密码</a>
+      </div>
+      <div class="m-login-up">
+        <button class="m-login-btn" @click="doLogin"><span>登录</span></button>
+      </div>
+      <div class="m-login-up">
+        <a href="register.html">
+          <button class="m-register-btn"><span>注册</span></button>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/vue.min.js"></script>
+  <script src="js/element-ui.js"></script>
+  <script src="js/axios.min.js"></script>
+  <script src="js/my/cookie_utils.js"></script>
+  <script src="js/my/base.js"></script>
+  <script src="js/my/one.js"></script>
+</body>
+</html>

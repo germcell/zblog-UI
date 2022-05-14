@@ -1,0 +1,136 @@
+/* 登录、注册页面 */
+.m-login-content {
+  width: 100%;
+  height: 100%;
+  background-image: url(../images/del/login_bj6.png);
+}
+
+.m-register-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-image: url(../images/del/login_bj7.png);
+}
+
+.m-login {
+  position: absolute;
+  top: 3.7em;
+  right: 5em;
+  width: 21.4em;
+  height: 26em;
+  background-color: #fff;
+  border-radius: 3px;
+}
+
+.m-login .tips {
+  position: absolute;
+  top: 3.6rem;
+  left: 2.14rem;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8em;
+  color: red;
+  font-weight: 600;
+}
+
+.m-login h3 {
+  margin: 2em auto;
+  text-align: center;
+}
+
+.m-login .m-login-up {
+  padding: 0.5em 1.6em;
+  width: 85%;
+}
+
+.m-login .m-login-up input {
+  border: none;
+  background-color: #f5f6f7;
+}
+
+.m-login .m-forgetpwd {
+  padding-left: 21em;
+  font-size: 0.7em;
+  color: #605c5c;
+  text-decoration: none;
+}
+
+.m-login .comd {
+  width: 100%;
+}
+
+.m-login .m-login-btn {
+  background-color: #409eff;
+  border: 1px solid #409eff;
+  width: 100%;
+  height: 3em;
+  border-radius: 20px;
+}
+
+.m-login .m-login-btn:hover {
+  background-color: #66b1ff;
+  cursor: pointer;
+}
+
+.m-login .m-login-btn span {
+  color: white;
+  font-size: 1.3em;
+}
+
+.m-login .m-register-btn {
+  background-color: #fff;
+  border: 1px solid #dcdfe6;
+  width: 100%;
+  height: 3em;
+  border-radius: 20px;
+}
+
+.m-login .m-register-btn2 {
+  background-color: #a24b4ba6;
+  border: 1px solid #dcdfe6;
+  color: white;
+}
+
+.m-login .m-register-btn span {
+  font-size: 1.3em;
+}
+
+.m-login .m-register-btn:hover {
+  background-color: #f56c6c;
+  cursor: pointer;
+}
+
+.m-login .m-vs-flex {
+  display: flex;
+}
+
+.m-login .m-vs-flex .m-send-vcode-btn {
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  background-color: #c39b9b;
+}
+
+.m-login .m-send-vcode-btn:hover {
+  background-color: #a24b4ba6;
+  cursor: pointer;
+}
+
+.error {
+  background-color: #ff000008;
+  border: 1px solid #ff000073;
+}
+
+.r-success {
+  margin: 4em auto;
+  text-align: center;
+}
+.r-success h4 {
+  margin-top: 1em;
+  color: green;
+}
+
+.r-success h4 a {
+  font-size: 0.7em;
+  color: rgb(77, 39, 216);
+}

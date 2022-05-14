@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/element-ui.css">
+  <link rel="stylesheet" href="./css/index2.css">
+  <title>注册-ZBLOG</title>
+  <style media="all">
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="register-container" class="m-register-content">
+    <div class="m-login">
+      <h3 style="margin: 1em auto 1.5em auto;">账号注册</h3> 
+      <template v-if="registerSuccess">
+        <div class="r-success">
+          <img src="images/del/success.png" width="100" height="100" alt="">
+          <h4>注册成功<a href="login.html">,立即登录</a></h4>
+        </div>
+      </template>
+      <template v-else>
+        <p class="tips">{{msg}}</p>
+        <div class="m-login-up">
+          <el-input 
+            placeholder="用户名/笔名" 
+            autocomplete="off" 
+            v-model="registerData.writerName" 
+            clearable 
+            maxlength="50"
+            @blur="checkWriterName">
+          </el-input>
+        </div>
+        <div class="m-login-up">
+          <el-input placeholder="密码" v-model="registerData.pwd" show-password maxlength="18"></el-input>
+        </div>
+        <div class="m-login-up">
+          <el-input
+            placeholder="再次输入密码" 
+            v-model="registerData.repeatPwd" 
+            show-password
+            maxlength="18"
+            @blur="checkPwd">
+          </el-input>
+        </div>
+        <div class="m-login-up">
+          <el-input 
+            placeholder="邮箱地址" 
+            v-model="registerData.mail" 
+            :validate-event="true" 
+            clearable
+            @blur="checkMail">
+        </el-input>
+        </div>
+        <div class="m-login-up m-vs-flex">
+            <el-input 
+              placeholder="验证码" 
+              v-model="registerData.code" 
+              maxlength="4"
+              @blur="checkCode">
+          </el-input>
+            <button class="m-send-vcode-btn" @click="sendCode"><span>{{codeMsg}}</span></button>
+        </div>
+        <div class="m-login-up">
+            <button class="m-register-btn m-register-btn2" @click="doRegister"><span>注册</span></button>
+        </div>
+      </template>
+     
+    </div>
+  </div>
+
+  <script src="js/my/base.js"></script>
+  <script src="js/vue.min.js"></script>
+  <script src="js/axios.min.js"></script>
+  <script src="js/element-ui.js"></script>
+  <script src="js/my/one.js"></script>
+</body>
+</html>

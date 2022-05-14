@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/res/favicon.ico}">
+    <title>归档</title>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"> -->
+    <link rel="stylesheet" href="../static/css/semantic.min.css" th:href="@{/res/css/semantic.min.css}">
+    <link rel="stylesheet" href="../static/dist/components/icon.min.css" th:href="@{/res/dist/components/icon.min.css}">
+    <link rel="stylesheet" href="../static/css/index.css" th:href="@{/res/css/index.css}">
+</head>
+<body>
+    <!-- 导航 -->
+    <div th:include="common :: nav(3)"></div>
+
+    <!-- 主体内容 -->
+    <div class="m-content m-padding-big" style="padding-bottom: 5em !important;">
+        <!-- header -->
+        <div class="ui top purple attached segment">
+            <div class="ui two column grid">
+                <div class="column">
+                    <h3 class="ui purple header">归档</h3>
+                </div>
+                <div class="column right aligned">
+                    共 <span class="blogCount">124</span> 篇博客
+                </div>
+            </div>
+        </div>
+        <!-- 归档内容 -->
+        <h2 class="ui header center aligned">2020年</h2>
+        <div class="ui fluid vertical menu">
+            <a href="#" class="item" style="font-size: 1.1em;">
+                <span>
+                    <i class="icon edit outline purple" style="padding-right: 1.5em !important;"></i><span>如何深度学习</span> 
+                    <div class="ui purple basic left pointing label mini" style="margin-left: 1.5em !important;">9月02</div>
+                </span>
+                <!-- <i class="ui basic"></i>saf -->
+                <div class="ui orange basic label small">原创</div>
+            </a>
+            <a href="#" class="item" style="font-size: 1.1em;">
+                <span>
+                    <i class="icon edit outline purple" style="padding-right: 1.5em !important;"></i><span>如何深度学习</span> 
+                    <div class="ui purple basic left pointing label mini" style="margin-left: 1.5em !important;">9月02</div>
+                </span>
+                <!-- <i class="ui basic"></i>saf -->
+                <div class="ui orange basic label small">原创</div>
+            </a>
+            <a href="#" class="item" style="font-size: 1.1em;">
+                <span>
+                    <i class="icon edit outline purple" style="padding-right: 1.5em !important;"></i><span>如何深度学习</span> 
+                    <div class="ui purple basic left pointing label mini" style="margin-left: 1.5em !important;">9月02</div>
+                </span>
+                <!-- <i class="ui basic"></i>saf -->
+                <div class="ui orange basic label small">原创</div>
+            </a>
+        </div>
+        <h2 class="ui header center aligned">2019年</h2>
+        <div class="ui fluid vertical menu">
+            <a href="#" class="item" style="font-size: 1.1em;">
+                <span>
+                    <i class="icon edit outline purple" style="padding-right: 1.5em !important;"></i><span>如何深度学习</span> 
+                    <div class="ui purple basic left pointing label mini" style="margin-left: 1.5em !important;">9月02</div>
+                </span>
+                <!-- <i class="ui basic"></i>saf -->
+                <div class="ui orange basic label small">原创</div>
+            </a>
+            <a href="#" class="item" style="font-size: 1.1em;">
+                <span>
+                    <i class="icon edit outline purple" style="padding-right: 1.5em !important;"></i><span>如何深度学习</span> 
+                    <div class="ui purple basic left pointing label mini" style="margin-left: 1.5em !important;">9月02</div>
+                </span>
+                <!-- <i class="ui basic"></i>saf -->
+                <div class="ui orange basic label small">原创</div>
+            </a>
+            <a href="#" class="item" style="font-size: 1.1em;">
+                <span>
+                    <i class="icon edit outline purple" style="padding-right: 1.5em !important;"></i><span>如何深度学习</span> 
+                    <div class="ui purple basic left pointing label mini" style="margin-left: 1.5em !important;">9月02</div>
+                </span>
+                <!-- <i class="ui basic"></i>saf -->
+                <div class="ui orange basic label small">原创</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 底部版权 -->
+    <div th:include="common :: copyright"></div>
+
+    <!--  关于我  -->
+    <div th:include="common :: aboutme"></div>
+
+
+<!-- --------------------- js ------------------------------------------------------------------------------ -->
+    <script src="../static/js/jquery.min.js" th:src="@{/res/js/jquery.min.js}"></script>
+    <!-- <script src="js/flexible.js"></script> -->
+    <script src="../static/js/semantic.min.js" th:src="@{/res/js/semantic.min.js}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            /*------------移动端显示导航栏------------- */
+            $("#m-show-nav").on("click", function() {
+                $(".m-item").toggle("fast",function(){
+                    $(".m-item").removeClass("m-mobile-hide");
+                });
+            })
+
+              /*------------关于我模态框------------*/
+              $("#about-me").on("click", function() {
+                $('.ui.modal').modal('show');
+            })
+ 
+            /*-----------QQ------------*/
+            $(".m-qq").on("click", function() {
+                // $(".m-qq-qr").fadeIn("slow")
+                $(".m-qq-qr").toggle("slow", function() {
+                    $(".m-qq-qr").removeClass(".m-qq-qr")
+                })
+            })
+            
+            /*-----------WECHAT------------*/
+            $(".m-wechat").on("click", function() {
+                // $(".m-qq-qr").fadeIn("slow")
+                $(".m-wechat-qr").toggle("slow", function() {
+                    $(".m-wechat-qr").removeClass(".m-wechat-qr")
+                })
+            })
+            
+            /*-----------GITHUB------------*/
+            $(".m-github").on("click", function() {
+                // $(".m-qq-qr").fadeIn("slow")
+                $(".m-github-qr").toggle("slow", function() {
+                    $(".m-github-qr").removeClass(".m-github-qr")
+                })
+            })
+            
+        })
+    </script>
+    
+</body>
+</html>

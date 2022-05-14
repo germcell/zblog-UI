@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="favicon.ico" >
+  <title>个人主页 - Z社区</title>
+  <link rel="stylesheet" href="css/semantic.min.css">
+  <link rel="stylesheet" href="css/element-ui.css">
+  <link rel="stylesheet" href="dist/components/icon.min.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <div id="pp-container">
+    <div class="nav-flexed">
+        <nav class="ui attached segment m-navpd">
+            <div class="ui container">
+                <div class="ui inverted secondary menu stackable m-navpd-child">
+                    <a href="index.html">
+                        <img src="images/del/logo.png" class="m-logo" title="ZBLOG首页">
+                    </a>
+                    <a href="index.html" class="item m-item m-mobile-hide">首页</a>
+                    <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="选择你感兴趣的文章类型">文章分类</a>
+                    <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="热门活动">本站活动</a>
+                    <div class="right item m-item m-mobile-hide" style="height: 50px !important;">
+                        <form class="ui form" method="get" target="_blank" action="">
+                            <div class="ui icon input">
+                                <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
+                                <i class="search link icon"></i>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="m-login-commd">
+                       <ul v-if="userInfo.isLogin">
+                           <li style="margin-right: 0;">
+                            <el-dropdown>
+                                <a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" title="个人中心">
+                                    <el-avatar :size="35" :src="'images/avatar/'+userInfo.avatar"></el-avatar>
+                                </a>
+                                <el-dropdown-menu slot="dropdown">
+                                        <div class="m-login-userInfo"> 
+                                            <el-dropdown-item disabled>
+                                                <span class="m-wn">
+                                                    {{userInfo.wName}}
+                                                    <i :class="[userInfo.isMale?'icon man':'icon woman']" :style="{'color':(userInfo.isMale?'skyblue':'#fe99ab')}"></i>
+                                                </span>
+                                            </el-dropdown-item>
+                                        </div> 
+                                        <div class="m-login-userInfo"> 
+                                            <el-dropdown-item disabled>
+                                               <ul class="m-af">
+                                                   <li>文章: {{userInfo.articleNum}}</li>
+                                                   <li>粉丝: {{userInfo.fans}}</li>
+                                               </ul> 
+                                            </el-dropdown-item>
+                                        </div>  
+                                </el-dropdown-menu>
+                              </el-dropdown>
+                           </li>
+                           <li style="margin-right: 2em; width: 4em;"><a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" style="color: black;">个人中心</a></li>
+                           <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" target="_blank" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                           <li class="m-lg" @click="logout">退出</li>
+                       </ul> 
+                        <ul v-else>
+                            <li><a href="login.html" class="m-login" title="登录">登录 / </a></li>
+                            <li><a href="register.html" class="m-register" title="去注册">注册</a></li>
+                            <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <a id="m-show-nav" href="javascript:;" class="ui inverted icon button m-top-right m-mobile-show">
+                <i class="sidebar icon"></i>
+            </a>
+        </nav>
+    </div>
+   
+    <!-- 主体部分 -->
+    <div class="m-personal-content">
+      <div class="ui grid">
+        <div class="twelve wide column">
+          <div class="ui segment">
+            <div class="m-personal">
+              <div class="m-user-avatar" @mouseenter="showAvatarMask" @mouseleave="hideAvatarMask">
+                <img :src="'images/avatar/'+userInfo.avatar" alt="用户头像" class="ui circular image" width="60">
+                <div class="m-avatar-mask" v-if="isEditAvatar"><a href="javascript:;" @click="updateAvatar">更换</a></div>
+            </div>
+              <div>
+                <p class="m-pn">
+                    {{userInfo.wName}} 
+                    <i :class="[userInfo.isMale?'icon man':'icon woman']" :style="{'color':(userInfo.isMale?'skyblue':'#fe99ab')}"></i>
+                </p>
+                <ui class="m-personal-access">
+                  <li><span> {{profile.writer.allViews}} 被访问 </span></li>
+                  <li><span> {{profile.writer.articleNum}} 文章 </span></li>
+                  <li><span> {{profile.writer.fans}} 粉丝 </span></li>
+                  <li><span> {{profile.writer.allLikeNums}} 点赞 </span></li>
+                </ui>
+              </div>
+              <div>
+                <button class="ui green button" title="私信"><i class="mail icon"></i> 23</button>
+                <a href="#userinfobox" class="ui button" title="编辑个人资料" @click="showInfo"><i class="icon settings"></i> 编辑资料</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui grid">
+        <div class="fifteen wide column">
+            <h3 class="ui header">我的文章</h3>
+            <template v-for="article in profile.articles" :key="article.did">
+                <div class="ui attached segment m-padding-small">
+                    <div class="ui mobile reversed stackable grid">
+                      <div class="nine wide column" style="padding-right: 0 !important;">
+                          <a href="javascript:;" target="_blank">
+                              <h3 class="ui header m-overflow-blog-title">{{article.title}}</h3>
+                          </a>
+                              <p class="m-blogtext m-overflow-blog">{{article.outline}}</p>
+                          <div class="ui mini m-infobox">
+                              <div class="m-info">
+                                  <div class="m-calendar">
+                                      <i class="calendar icon"></i> <span>{{dateFormat(article.writeTime, true)}}</span>
+                                  </div>
+                                  <div class="m-eye">
+                                      <i class="thumbs up icon"></i> <span>{{article.likeNum}}</span>
+                                  </div>
+                                  <div class="m-eye">
+                                      <i class="eye icon"></i> <span>{{article.views}}</span>
+                                  </div>
+                                  <div class="m-blog-status" v-if="article.isPublish==0">
+                                      <span style="color: #ff0000f7;">草稿</span> 
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="four wide column">
+                          <div>
+                              <a href="javascript:;" target="_blank" v-if="article.firstPicture!=null">
+                                  <img :src="'images/fp/'+article.firstPicture" class="ui image rounded m-blog-img-size" alt="丢失">
+                              </a>
+                          </div>
+                      </div>
+                      <div class="three wide column">
+                        <div class="m-blog-comd">
+                          <div>
+                              <button class="ui white basic button" title="编辑内容" @click="editArticle(article.did)">编辑</button>
+                          </div>
+                          <div class="ui compact menu m-dropdown">
+                              <div class="ui simple dropdown item">. . .
+                                  <div class="menu">
+                                      <template v-if="article.isPublish">
+                                          <div class="item" title="置为草稿状态" @click="setArticleStatus(0, article.did, article.uid)"> <i class="icon hide"></i> 隐藏 </div>
+                                      </template>
+                                      <template v-else>
+                                        <div class="item" title="发布文章" @click="setArticleStatus(1, article.did, article.uid)"> <i class="icon location arrow"></i> 发布 </div>
+                                      </template>
+                                  <div class="item" title="删除文章" @click="setArticleStatus(2, article.did, article.uid)"> <i class="icon trash"></i> 删除 </div>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </template>
+        </div>
+      </div>
+
+    <!-- 修改个人资料 -->
+    <div id="userinfobox" class="ui grid" v-if="showUserinfoBox">
+        <div class="twelve wide column">
+            <h3 class="ui header">个人信息</h3>
+            <div class="ui segment m-update-info-box">
+                <ul>
+                    <li>
+                        <div>
+                            用户ID:
+                            <span class="m-i">JSNA{{profile.writer.uid}}</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            邮箱地址:
+                            <span class="m-i">{{profile.writer.mail}}</span>
+                        </div>
+                    </li>
+                    <li @mouseenter="showEdit" @mouseleave="hideEdit">
+                        <div>
+                            用户名/笔名:
+                            <div class="ui mini input m-i" v-if="isEditUsername">
+                                <input type="text" v-model="profile.newWriter.writerName">
+                                <div style="margin-left: 1em;">
+                                    <button class="ui circular secondary mini button" @click="doEdit(1)">提交</button>
+                                    <button class="ui circular basic mini button" @click="escEdit(1)">取消</button>
+                                </div>
+                            </div>
+                            <span class="m-i" v-else>{{profile.writer.writerName}}</span>
+                            <span class="m-c" v-if="isShowEditBtn" @click="editUsername"><i class="icon edit"></i>编辑</span>
+                        </div>
+                    </li>
+                    <li @mouseenter="showEdit" @mouseleave="hideEdit">
+                        <div>
+                            电话号码:
+                            <div class="ui mini input m-i" v-if="isEditPhone">
+                                <input type="text" maxlength="11" v-model="profile.newWriter.writerPhone">
+                                <div style="margin-left: 1em;">
+                                    <button class="ui circular secondary mini button" @click="doEdit(2)">提交</button>
+                                    <button class="ui circular basic mini button" @click="escEdit(2)">取消</button>
+                                </div>
+                            </div>
+                            <span class="m-i" v-else>{{profile.writer.writerPhone}}</span>
+                            <span class="m-c" v-if="isShowEditBtn" @click="editPhone"><i class="icon edit"></i>编辑</span>
+                        </div>
+                    </li>
+                    <li @mouseenter="showEdit" @mouseleave="hideEdit">
+                        <div>
+                            性别:
+                            <span v-if="isEditSex" style="margin-left: 1em;">
+                                <input id="male" type="radio" name="sex" value="male" v-model="profile.newWriter.writerSex"><label for="male">男</label> 
+                                <input id="female" type="radio" name="sex" value="female" v-model="profile.newWriter.writerSex"><label for="female">女</label> 
+                                <spaan style="margin-left: 1em;">
+                                    <button class="ui circular secondary mini button" @click="doEdit(3)">提交</button>
+                                    <button class="ui circular basic mini button" @click="escEdit(3)">取消</button>
+                                </span>
+                            </span>
+                            <span class="m-i" v-else>{{profile.writer.writerSex}}</span>
+                            <span class="m-c" v-if="isShowEditBtn" @click="editSex"><i class="icon edit"></i>编辑</span>
+                        </div>
+                    </li>
+                    <li @mouseenter="showEdit" @mouseleave="hideEdit">
+                        <div>
+                            出生日期:
+                            <span v-if="isEditBirthday">
+                                <div class="ui mini input">
+                                    <input type="date" v-model="profile.newWriter.writerBirthday">
+                                    <div style="margin-left: 1em;">
+                                        <button class="ui circular secondary mini button" @click="doEdit(4)">提交</button>
+                                        <button class="ui circular basic mini button" @click="escEdit(4)">取消</button>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="m-i" v-else>{{dateFormat(profile.writer.writerBirthday, false)}}</span>
+                            <span class="m-c" v-if="isShowEditBtn" @click="editBirthday"><i class="icon edit"></i>编辑</span>
+                        </div>
+                    </li>
+                    <li @mouseenter="showEdit" @mouseleave="hideEdit">
+                        <div>
+                            个人介绍:
+                            <span v-if="isEditProduce" style="vertical-align: text-top;">
+                                <div class="ui input">
+                                    <textarea name="" id="" cols="40" rows="3" style="resize: none;" v-model="profile.newWriter.writerIntroduce">
+
+                                    </textarea>
+                                    <div style="margin-left: 1em;">
+                                        <button class="ui circular secondary mini button" @click="doEdit(5)">提交</button>
+                                        <button class="ui circular basic mini button" @click="escEdit(5)">取消</button>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="m-i" v-else>{{profile.writer.writerIntroduce}}</span>
+                            <span class="m-c" v-if="isShowEditBtn" @click="editProduce"><i class="icon edit"></i>编辑</span>
+                        </div>
+                    </li>
+                    <li @click="showInfo"> <p class="m-hide-userinfo"> <i class="icon angle up"></i> 收起</p> </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+         
+      
+
+    </div>
+
+    <footer class="ui inverted vertical segment m-footer">
+        <div class="ui center aligned container">
+            <div class="ui inverted divided grid mobile reversed stackable">
+                <div class="three wide column">
+                    <div class="ui inverted list">
+                        <div class="item">
+                            <img class="ui rounded image" src="images/del/wechat.png" alt="联系我" style="width: 80px !important; height: 80px !important;">
+                        </div>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <h4 class="ui inverted header">联系我</h4>
+                    <p class="copyright">Gitee : germcell</p>
+                    <p class="copyright right aligned">WeChat : z_Cricket</p>
+                </div>
+                <div class="three wide column">
+                    <h4 class="ui inverted header">本站声明</h4>
+                    <p class="copyright">xxxxxxxxxxxxxxxxxxx</p>
+                </div>
+                <div class="seven wide column">
+                    <h4 class="ui inverted header">开发日志</h4>
+                    <p class="copyright">1.xxxxxxxx</p>
+                </div>
+            </div>
+            <div class="ui inverted section divider"></div>
+            <p class="copyright">Copyright &copy; 2022</p>
+            <p class="copyright">https://gitee.com/germcell/blog.git</p>
+        </div>
+    </footer>
+
+    <!-- 上传头像模态框 -->
+    <div class="ui modal tiny">
+        <div class="header">修改头像</div>
+        <div class="content">
+            <input ref="uploadAvatar" type="file">
+            <p style="margin-top: 1em;color: #999;">最大支持文件大小1MB,支持图片格式JPG、JPEG、PNG</p>
+            <template v-if="uploadAvatarSuccess">
+                <img :src="uploadAvatarSrc" alt="" width="100">
+            </template>
+        </div>
+        <div class="actions">
+          <div class="ui cancel button">取消</div>
+          <div class="ui right icon button" @click="showUploadAvatar">预览</div>
+          <div class="ui right icon button green" @click="doEdit(6)">确定</div>
+        </div>
+    </div>
+
+  </div>
+
+  <script src="js/my/base.js"></script>
+  <script src="js/vue.min.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/semantic.min.js"></script>
+  <script src="js/element-ui.js"></script>
+  <script src="js/my/two.js"></script>
+  <script src="js/my/cookie_utils.js"></script>
+  <script src="js/axios.min.js"></script>
+  <script src="js/my/one.js"></script>
+ 
+</body>
+</html>
