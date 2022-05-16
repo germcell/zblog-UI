@@ -21,11 +21,11 @@
                         <a href="index.html">
                             <img src="images/del/logo.png" class="m-logo" title="ZBLOG首页">
                         </a>
-                        <a href="index.html" class="item m-item m-mobile-hide" style="color: #ee2727 !important;">首页</a>
+                        <a href="index.html" class="item m-item m-mobile-hide m-active-nav">首页</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="选择你感兴趣的文章类型">文章分类</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="热门活动">本站活动</a>
-                        <div class="right item m-item m-mobile-hide" style="height: 50px !important;">
-                            <form class="ui form" method="get" target="_blank" action="" th:action="@{/blog/condition/page/1}">
+                        <div class="right item m-item m-mobile-hide" style="height: 50px !important; margin-left: 30% !important;">
+                            <form class="ui form" method="get" target="_blank">
                                 <div class="ui icon input">
                                     <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
                                     <i class="search link icon"></i>
@@ -78,80 +78,83 @@
         </div>
         
         <!-- 推荐文章/活动 -->
-        <div class="m-index-content ui grid" style="padding-bottom: 0 !important;">
-            <div class="eleven wide column">
-                <template v-if="ad.type==1">
-                    <div class="ui segment">
-                        <div class="ui grid">
-                            <div class="nine wide column">
-                                <a :href="ad.adUrl" target="_blank">
-                                    <img :src="'images/fp/'+ad.adImgUrl" class="ui image" height="250">
-                                </a>
-                            </div>
-                            <div class="seven wide column" style="padding: 70px 10px !important;">
-                                <h3 class="m-overflow-ad-title" :title="ad.adTitle">
-                                    <a :href="ad.adUrl" target="_blank" class="ui header" v-text="ad.adTitle">一场爱的邂逅</a>
-                                </h3>
-                                <p class="m-blogtext m-overflow-ad" v-text="ad.adDesc">一女性朋友，把她在花山300多平的独栋别墅卖了，跑二环内买了一套两居室。
-                                    我问她：“为啥？人家都是越换越大，你这怎么越整越小？”
-                                    她说：“年龄大没上三楼。家里就阿姨每天过来收拾一下，其他时候都是我一个人。叫一嗓子都有回音，走哪都凉飕飕的，真没人气儿。”
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-                <template v-else>
-                    <div class="ui segment">
-                        <div class="ui grid">
-                            <div class="nine wide column">
-                                <a href="javascript:;">
-                                    <img :src="'images/fp/'+ad.firstPicture" class="ui image" height="250">
-                                </a>
-                            </div>
-                            <div class="seven wide column" style="padding: 70px 10px !important;">
-                                <h3 class="m-overflow-ad-title" :title="ad.title">
-                                    <a href="javascript:;" class="ui header" v-text="ad.title">一场爱的邂逅</a>
-                                </h3>
-                                <p class="m-blogtext m-overflow-ad" v-text="ad.outline">一女性朋友，把她在花山300多平的独栋别墅卖了，跑二环内买了一套两居室。
-                                    我问她：“为啥？人家都是越换越大，你这怎么越整越小？”
-                                    她说：“年龄大没上三楼。家里就阿姨每天过来收拾一下，其他时候都是我一个人。叫一嗓子都有回音，走哪都凉飕飕的，真没人气儿。”
-                                </p>
+        <div class="m-index-content" style="padding-bottom: 0 !important;">
+            <div class="ui container grid">
+                <div class="eleven wide column">
+                    <template v-if="ad.type==1">
+                        <div class="ui segment">
+                            <div class="ui grid">
+                                <div class="nine wide column">
+                                    <a :href="ad.adUrl" target="_blank">
+                                        <img :src="'images/fp/'+ad.adImgUrl" class="ui image" height="250">
+                                    </a>
+                                </div>
+                                <div class="seven wide column" style="padding: 70px 10px !important;">
+                                    <h3 class="m-overflow-ad-title" :title="ad.adTitle">
+                                        <a :href="ad.adUrl" target="_blank" class="ui header" v-text="ad.adTitle">一场爱的邂逅</a>
+                                    </h3>
+                                    <p class="m-blogtext m-overflow-ad" v-text="ad.adDesc">一女性朋友，把她在花山300多平的独栋别墅卖了，跑二环内买了一套两居室。
+                                        我问她：“为啥？人家都是越换越大，你这怎么越整越小？”
+                                        她说：“年龄大没上三楼。家里就阿姨每天过来收拾一下，其他时候都是我一个人。叫一嗓子都有回音，走哪都凉飕飕的，真没人气儿。”
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                </template>
-            </div>
-            <div class="five wide column">
-                <!-- 热门文章标题 -->
-                <div class="ui segments">
-                    <div class="ui secondary segment" style="border-bottom: 3px solid #8080807d;background-color: #fff;padding: 0.7em;">
-                        <div class="ui two column grid">
-                            <div class="column">
-                                <i class="icon thumbs up" style="color: #ee2727 !important;font-size: 1.3em;"></i>
-                                <h5 class="ui header" style="display: inline;">更多人看</h5>
-                            </div>
-                            <div class="column">
-                                <button class="m-change-hot" @click="changehot"><i class="icon sync alternate"></i>换一换</button>
+                    </template>
+                    <template v-else>
+                        <div class="ui segment">
+                            <div class="ui grid">
+                                <div class="nine wide column">
+                                    <a href="javascript:;">
+                                        <img :src="'images/fp/'+ad.firstPicture" class="ui image" height="250">
+                                    </a>
+                                </div>
+                                <div class="seven wide column" style="padding: 70px 10px !important;">
+                                    <h3 class="m-overflow-ad-title" :title="ad.title">
+                                        <a href="javascript:;" class="ui header" v-text="ad.title">一场爱的邂逅</a>
+                                    </h3>
+                                    <p class="m-blogtext m-overflow-ad" v-text="ad.outline">一女性朋友，把她在花山300多平的独栋别墅卖了，跑二环内买了一套两居室。
+                                        我问她：“为啥？人家都是越换越大，你这怎么越整越小？”
+                                        她说：“年龄大没上三楼。家里就阿姨每天过来收拾一下，其他时候都是我一个人。叫一嗓子都有回音，走哪都凉飕飕的，真没人气儿。”
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="ui teal">
-                        <div class="ui fluid vertical menu">
-                            <template v-for="hb,i in hotBlogs" :key="bh.did">
-                                <a :href="'blog.html?bid='+hb.did" class="item m-rank-hidden" target="_blank">
-                                    <template v-if="(i+1) > 3">
-                                        <span class="m-rank">{{i+1}}</span><span>{{hb.title}}</span>
-                                    </template>
-                                    <template v-else>
-                                        <span :class="'m-rank'+(i+1)">{{i+1}}</span><span>{{hb.title}}</span>
-                                    </template>
-                                </a>
-                            </template>
+                        
+                    </template>
+                </div>
+                <div class="five wide column">
+                    <!-- 热门文章标题 -->
+                    <div class="ui segments">
+                        <div class="ui secondary segment" style="border-bottom: 3px solid #8080807d;background-color: #fff;padding: 0.7em;">
+                            <div class="ui two column grid">
+                                <div class="column">
+                                    <i class="icon thumbs up" style="color: #ee2727 !important;font-size: 1.3em;"></i>
+                                    <h5 class="ui header" style="display: inline;">更多人看</h5>
+                                </div>
+                                <div class="column">
+                                    <button class="m-change-hot" @click="changehot"><i class="icon sync alternate"></i>换一换</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui teal">
+                            <div class="ui fluid vertical menu">
+                                <template v-for="hb,i in hotBlogs" :key="bh.did">
+                                    <a :href="'blog.html?bid='+hb.did" class="item m-rank-hidden" target="_blank">
+                                        <template v-if="(i+1) > 3">
+                                            <span class="m-rank">{{i+1}}</span><span>{{hb.title}}</span>
+                                        </template>
+                                        <template v-else>
+                                            <span :class="'m-rank'+(i+1)">{{i+1}}</span><span>{{hb.title}}</span>
+                                        </template>
+                                    </a>
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+          
         </div>
     
         <!-- 主体内容 -->

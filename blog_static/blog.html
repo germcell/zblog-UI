@@ -17,38 +17,6 @@
 </head>
 <body>
     <div id="blog-container">
-        <!-- <div class="nav-flexed">
-            <nav class="ui attached segment m-navpd">
-                <div class="ui container">
-                    <div class="ui inverted secondary menu stackable m-navpd-child">
-                        <a href="index.html">
-                            <img src="images/del/logo.png" class="m-logo" title="ZBLOG首页">
-                        </a>
-                        <a href="javascript:void(0);" class="item m-item m-mobile-hide" th:classappend="${n==1} ? 'active'" th:href="@{/blog/index/}" title="最新发布的文章">最新发布</a>
-                        <a href="javascript:void(0);" class="item m-item m-mobile-hide" th:classappend="${n==2} ? 'active'" th:href="@{/blog/category/1/}" title="博文分类">分类</a>
-                        <div class="right item m-item m-mobile-hide" style="height: 50px !important;">
-                            <form class="ui form" method="get" target="_blank" action="" th:action="@{/blog/condition/page/1}">
-                                <div class="ui icon input">
-                                    <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
-                                    <i class="search link icon"></i>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="m-login-commd">
-                            <ul>
-                                <li><a href="login.html" class="m-login" title="登录">登录 / </a></li>
-                                <li><a href="register.html" class="m-register" title="去注册">注册</a></li>
-                                <li class="m-write-hover" title="记录你的日常、学习"><a class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <a id="m-show-nav" href="javascript:;" class="ui inverted icon button m-top-right m-mobile-show">
-                    <i class="sidebar icon"></i>
-                </a>
-            </nav>
-        </div> -->
-
         <div class="nav-flexed">
             <nav class="ui attached segment m-navpd">
                 <div class="ui container">
@@ -59,8 +27,8 @@
                         <a href="index.html" class="item m-item m-mobile-hide">首页</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="选择你感兴趣的文章类型">文章分类</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="热门活动">本站活动</a>
-                        <div class="right item m-item m-mobile-hide" style="height: 50px !important;">
-                            <form class="ui form" method="get" target="_blank" action="" th:action="@{/blog/condition/page/1}">
+                        <div class="right item m-item m-mobile-hide" style="height: 50px !important; margin-left: 30% !important">
+                            <form class="ui form" method="get" target="_blank">
                                 <div class="ui icon input">
                                     <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
                                     <i class="search link icon"></i>
@@ -113,228 +81,229 @@
         </div>
 
         <!-- 主体内容 -->
-        <div class="ui grid m-container m-newblog-content animated fadeIn">
-            <div class="five wide column">
-                <div class="ui segment">
-                    <p class="m-tocbot">目录</p>
-                    <div class="ui showToc" >
-                        <ol class="js-toc">
-                        </ol>
+        <div class="m-blog-bj">
+            <div class="ui container grid m-container m-newblog-content animated fadeIn">
+                <div class="five wide column">
+                    <div class="ui segment">
+                        <p class="m-tocbot">目录</p>
+                        <div class="ui showToc" >
+                            <ol class="js-toc">
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="ui segment">
+                        <p class="m-tocbot">热门文章</p>
+                        <!-- TODO 热门文章数据查询 -->
                     </div>
                 </div>
-                <div class="ui segment">
-                    <p class="m-tocbot">热门文章</p>
-                    <!-- TODO 热门文章数据查询 -->
-                </div>
-            </div>
-            <div class="eleven wide column">
-                <div id="waypoint">
-                    <div class="ui segments">
-                            <div class="ui segment">
-                                <!--   作者、文章基本信息  -->
-                                <div class="m-user-info-flex">
-                                    <div class="ui m-avatar" style="font-size: 1.6em !important; margin-right: 1em;">
-                                        <a href="#" target="_blank">
-                                            <img :src="'images/avatar/'+writer.writerAvatar" class="ui avatar image" alt="">
-                                            <span> {{writer.writerName}} </span>
-                                        </a>
-                                    </div>
-                                    <div class="m-view-info">
-                                        <i class="icon clock"></i>于 <span>{{dateFormat(article.writeTime,true)}}</span> 发布
-                                    </div>
-                                    <div class="m-view-info">
-                                        <i class="icon thumbs up"></i><span>{{article.likeNum}}</span>
-                                    </div>
-                                    <div class="m-view-info">
-                                        <i class="icon eye"></i><span>{{article.views}}</span>
-                                    </div>
-                                    <div class="ui teal tag label m-view-cr-info">
-                                        <span>{{category.name}}</span>
-                                    </div>
-        
-                                </div>
-                            </div>
-                            <template v-if="article.firstPicture!=null && article.firstPicture!=''">
+                <div class="eleven wide column">
+                    <div id="waypoint">
+                        <div class="ui segments">
                                 <div class="ui segment">
-                                    <img :src="'images/fp/'+article.firstPicture" alt="" class="ui fluid rounded image" style="height: 457px;" th:src="${blog.firstPicture}">
-                                </div>
-                            </template>
-                            <!-- 内容 -->
-                            <div class="ui segment m-padding-blog-content">
-                                <div style="position: relative;">
-                                    <h1 class="ui m-diy-title">{{article.title}}</h1>
-                                    <div class="ui orange basic label m-copyright-position">{{copyright.crTip}}</div>
-                                    <hr>
-                                </div>
-                                <div class="typo typo-selection js-toc-content m-diy-content" v-html="article.content">
-                                    <!-- {{article.content}} -->
-                                </div>
-                            </div>
-        
-                            <!-- 赞赏、查看留言 -->
-                            <div id="leave-messsage" class="ui center aligned segment">
-                                <button id="comment" class="ui basic circular button" v-if="article.isComment==1">查看留言</button>
-                                <button id="thumbs-up" class="ui orange circular button" v-if="isThumbsUp" @click="like(1)"> <i class="icon thumbs up"></i> 已赞</button>
-                                <button id="thumbs-up" class="ui orange basic circular button" v-else @click="like(2)"> <i class="icon thumbs outline up"></i> 点赞</button>
-                                <button id="appreciate" class="ui orange basic circular button" v-if="article.isAppreciate==1">赞赏</button>
-                            </div>
-                            <!-- 赞赏二维码 -->
-                            <div class="ui showQR flowing popup transition hidden" style="padding: 5px;">
-                                <div class="ui orange basic label" style="padding: 3px 1px 0 1px;">
-                                    <div class="ui images rounded center aligned"  style="font-size: inherit;">
-                                        <div class="image">
-                                            <img src="images/del/wechat.png" class="ui rounded bordered image" style="width: 90px; height: 90px;">
-                                            <div style="color: #404040;text-align: center !important;">
-                                                支付宝
-                                            </div>
+                                    <!--   作者、文章基本信息  -->
+                                    <div class="m-user-info-flex">
+                                        <div class="ui m-avatar" style="font-size: 1.6em !important; margin-right: 1em;">
+                                            <a href="#" target="_blank">
+                                                <img :src="'images/avatar/'+writer.writerAvatar" class="ui avatar image" alt="">
+                                                <span> {{writer.writerName}} </span>
+                                            </a>
                                         </div>
-                                        <div class="image">
-                                            <img src="images/del/wechat.png" class="ui rounded bordered image" style="width: 90px; height: 90px;">
-                                            <div style="color: #404040;text-align: center !important;">
-                                                <i class="icon wechat" style="color: #00cc22;"></i>微信
+                                        <div class="m-view-info">
+                                            <i class="icon clock"></i>于 <span>{{dateFormat(article.writeTime,true)}}</span> 发布
+                                        </div>
+                                        <div class="m-view-info">
+                                            <i class="icon thumbs up"></i><span>{{article.likeNum}}</span>
+                                        </div>
+                                        <div class="m-view-info">
+                                            <i class="icon eye"></i><span>{{article.views}}</span>
+                                        </div>
+                                        <div class="ui teal tag label m-view-cr-info">
+                                            <span>{{category.name}}</span>
+                                        </div>
+            
+                                    </div>
+                                </div>
+                                <template v-if="article.firstPicture!=null && article.firstPicture!=''">
+                                    <div class="ui segment">
+                                        <img :src="'images/fp/'+article.firstPicture" alt="" class="ui fluid rounded image" style="height: 457px;" th:src="${blog.firstPicture}">
+                                    </div>
+                                </template>
+                                <!-- 内容 -->
+                                <div class="ui segment m-padding-blog-content">
+                                    <div style="position: relative;">
+                                        <h1 class="ui m-diy-title">{{article.title}}</h1>
+                                        <div class="ui orange basic label m-copyright-position">{{copyright.crTip}}</div>
+                                        <hr>
+                                    </div>
+                                    <div class="typo typo-selection js-toc-content m-diy-content" v-html="article.content">
+                                        <!-- {{article.content}} -->
+                                    </div>
+                                </div>
+            
+                                <!-- 赞赏、查看留言 -->
+                                <div id="leave-messsage" class="ui center aligned segment">
+                                    <button id="comment" class="ui basic circular button" v-if="article.isComment==1">查看留言</button>
+                                    <button id="thumbs-up" class="ui orange circular button" v-if="isThumbsUp" @click="like(1)"> <i class="icon thumbs up"></i> 已赞 {{article.likeNum}}</button>
+                                    <button id="thumbs-up" class="ui orange basic circular button" v-else @click="like(2)"> <i class="icon thumbs outline up"></i> 点赞 {{article.likeNum}}</button>
+                                    <button id="appreciate" class="ui orange basic circular button" v-if="article.isAppreciate==1">赞赏</button>
+                                </div>
+                                <!-- 赞赏二维码 -->
+                                <div class="ui showQR flowing popup transition hidden" style="padding: 5px;">
+                                    <div class="ui orange basic label" style="padding: 3px 1px 0 1px;">
+                                        <div class="ui images rounded center aligned"  style="font-size: inherit;">
+                                            <div class="image">
+                                                <img src="images/del/wechat.png" class="ui rounded bordered image" style="width: 90px; height: 90px;">
+                                                <div style="color: #404040;text-align: center !important;">
+                                                    支付宝
+                                                </div>
+                                            </div>
+                                            <div class="image">
+                                                <img src="images/del/wechat.png" class="ui rounded bordered image" style="width: 90px; height: 90px;">
+                                                <div style="color: #404040;text-align: center !important;">
+                                                    <i class="icon wechat" style="color: #00cc22;"></i>微信
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-        
-                            <!-- 留言区域-->
-                            <div class="m-show-comment" style="display: none; font-family: 'Arial','Microsoft YaHei','黑体','宋体',sans-serif;">
-                                <div class="ui teal segment">
-                                    <div class="ui comments">
-                                        <h3 class="ui dividing header" style="width: 125% !important;">留言栏</h3>
-                                        <!--      留言模板         -->
-                                        <div id="comment-fresh">
-                                            <div class="comment" th:fragment="commentList" th:each="comment:${comments}">
-                                                <a class="avatar">
-                                                    <img src="../static/images/commentAvatar/avatar22.jpg" th:src="${comment.avatar}">
-                                                </a>
-                                                <div class="content">
-                                                    <a class="author m-show-userInfo" data-mail="" th:data-mail="${comment.mail}" data-avatar="" th:data-avatar="${comment.avatar}"  th:text="${comment.nickname}">Matt</a>
-                                                    <div class="metadata">
-                                                        <span class="date" th:text="${#dates.format(comment.replyTime,'yyyy-MM-dd HH:mm:ss')}">今天下午 5:42</span>
-                                                    </div>
-                                                    <div class="text m-comment-is-pass" th:text="${comment.isPass eq true ? comment.content : comment.passContent}" th:classappend="${comment.isPass eq false} ? 'm-comment-no-pass'">太赞了！ </div>
-                                                    <div class="actions">
-                                                        <a class="reply" onclick="reply(this)" data-comid="" data-replynickname="" data-commentparentid="" th:data-commentparentid="${comment.comParentId}" th:data-replynickname="${comment.nickname}" th:data-comid="${comment.comId}">回复</a>
-                                                    </div>
-                                                </div>
-                                                <div class="comments" th:if="${comment.listChildComments != null}" style="padding-top: 0.5em!important;padding-bottom: 0.5em!important;">
-                                                    <div class="comment" th:each="childComment:${comment.listChildComments}">
-                                                        <a class="avatar">
-                                                            <img src="../static/images/commentAvatar/avatar23.jpg" th:src="${childComment.avatar}">
-                                                        </a>
-                                                        <div class="content">
-                                                            <a class="author m-show-userInfo" data-mail="" th:data-mail="${childComment.mail}" data-avatar="" th:data-avatar="${childComment.avatar}" th:text="${childComment.nickname}">Jenny Hess</a>
-                                                            <div class="metadata">
-                                                                <span class="date" th:text="${#dates.format(childComment.replyTime, 'yyyy-MM-dd HH:mm:ss')}">刚刚</span>
-                                                            </div>
-                                                            <div class="text m-comment-is-pass" th:text="${childComment.isPass eq true ? childComment.content : childComment.passContent}" th:classappend="${childComment.isPass eq false} ? 'm-comment-no-pass'">艾略特你永远是多么正确 :) </div>
-                                                            <!-- TODO 留言二级回复
-                                                            <div class="action">
-                                                                <a class="reply">回复</a>
-                                                            </div>
-                                                            -->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-        
-                                        <!--/*-->
-                                        <div class="comment">
-                                            <a class="avatar">
-                                                <img src="../static/images/commentAvatar/avatar23.jpg" th:src="@{/res/images/del_avatar.jpg}">
-                                            </a>
-                                            <div class="content">
-                                                <a class="author">Elliot Fu</a>
-                                                <div class="metadata">
-                                                    <span class="date">昨天上午12:30</span>
-                                                </div>
-                                                <div class="text">
-                                                    <p>這對我的研究是非常有用.謝謝!</p>
-                                                </div>
-                                                <div class="actions">
-                                                    <a class="reply">回复</a>
-                                                </div>
-                                            </div>
-                                            <div class="comments">
-                                                <div class="comment">
+            
+                                <!-- 留言区域-->
+                                <div class="m-show-comment" style="display: none; font-family: 'Arial','Microsoft YaHei','黑体','宋体',sans-serif;">
+                                    <div class="ui teal segment">
+                                        <div class="ui comments">
+                                            <h3 class="ui dividing header" style="width: 125% !important;">留言栏</h3>
+                                            <!--      留言模板         -->
+                                            <div id="comment-fresh">
+                                                <div class="comment" th:fragment="commentList" th:each="comment:${comments}">
                                                     <a class="avatar">
-                                                        <img src="../static/images/commentAvatar/avatar23.jpg" th:src="@{/res/images/del_avatar.jpg}">
+                                                        <img src="../static/images/commentAvatar/avatar22.jpg" th:src="${comment.avatar}">
                                                     </a>
                                                     <div class="content">
-                                                        <a class="author">Jenny Hess</a>
+                                                        <a class="author m-show-userInfo" data-mail="" th:data-mail="${comment.mail}" data-avatar="" th:data-avatar="${comment.avatar}"  th:text="${comment.nickname}">Matt</a>
                                                         <div class="metadata">
-                                                            <span class="date">刚刚</span>
+                                                            <span class="date" th:text="${#dates.format(comment.replyTime,'yyyy-MM-dd HH:mm:ss')}">今天下午 5:42</span>
                                                         </div>
-                                                        <div class="text">艾略特你永远是多么正确 :) </div>
+                                                        <div class="text m-comment-is-pass" th:text="${comment.isPass eq true ? comment.content : comment.passContent}" th:classappend="${comment.isPass eq false} ? 'm-comment-no-pass'">太赞了！ </div>
                                                         <div class="actions">
-                                                            <a class="reply">回复</a>
+                                                            <a class="reply" onclick="reply(this)" data-comid="" data-replynickname="" data-commentparentid="" th:data-commentparentid="${comment.comParentId}" th:data-replynickname="${comment.nickname}" th:data-comid="${comment.comId}">回复</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="comments" th:if="${comment.listChildComments != null}" style="padding-top: 0.5em!important;padding-bottom: 0.5em!important;">
+                                                        <div class="comment" th:each="childComment:${comment.listChildComments}">
+                                                            <a class="avatar">
+                                                                <img src="../static/images/commentAvatar/avatar23.jpg" th:src="${childComment.avatar}">
+                                                            </a>
+                                                            <div class="content">
+                                                                <a class="author m-show-userInfo" data-mail="" th:data-mail="${childComment.mail}" data-avatar="" th:data-avatar="${childComment.avatar}" th:text="${childComment.nickname}">Jenny Hess</a>
+                                                                <div class="metadata">
+                                                                    <span class="date" th:text="${#dates.format(childComment.replyTime, 'yyyy-MM-dd HH:mm:ss')}">刚刚</span>
+                                                                </div>
+                                                                <div class="text m-comment-is-pass" th:text="${childComment.isPass eq true ? childComment.content : childComment.passContent}" th:classappend="${childComment.isPass eq false} ? 'm-comment-no-pass'">艾略特你永远是多么正确 :) </div>
+                                                                <!-- TODO 留言二级回复
+                                                                <div class="action">
+                                                                    <a class="reply">回复</a>
+                                                                </div>
+                                                                -->
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="comment">
-                                            <a class="avatar">
-                                                <img src="../static/images/commentAvatar/avatar23.jpg" th:src="@{/res/images/del_avatar.jpg}">
-                                            </a>
-                                            <div class="content">
-                                                <a class="author">Joe Henderson</a>
-                                                <div class="metadata">
-                                                    <span class="date">5 天以前</span>
+            
+                                            <!--/*-->
+                                            <div class="comment">
+                                                <a class="avatar">
+                                                    <img src="../static/images/commentAvatar/avatar23.jpg" th:src="@{/res/images/del_avatar.jpg}">
+                                                </a>
+                                                <div class="content">
+                                                    <a class="author">Elliot Fu</a>
+                                                    <div class="metadata">
+                                                        <span class="date">昨天上午12:30</span>
+                                                    </div>
+                                                    <div class="text">
+                                                        <p>這對我的研究是非常有用.謝謝!</p>
+                                                    </div>
+                                                    <div class="actions">
+                                                        <a class="reply">回复</a>
+                                                    </div>
                                                 </div>
-                                                <div class="text">老兄，这太棒了。非常感谢。 </div>
-                                                <div class="actions">
-                                                    <a class="reply">回复</a>
+                                                <div class="comments">
+                                                    <div class="comment">
+                                                        <a class="avatar">
+                                                            <img src="../static/images/commentAvatar/avatar23.jpg" th:src="@{/res/images/del_avatar.jpg}">
+                                                        </a>
+                                                        <div class="content">
+                                                            <a class="author">Jenny Hess</a>
+                                                            <div class="metadata">
+                                                                <span class="date">刚刚</span>
+                                                            </div>
+                                                            <div class="text">艾略特你永远是多么正确 :) </div>
+                                                            <div class="actions">
+                                                                <a class="reply">回复</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="comment">
+                                                <a class="avatar">
+                                                    <img src="../static/images/commentAvatar/avatar23.jpg" th:src="@{/res/images/del_avatar.jpg}">
+                                                </a>
+                                                <div class="content">
+                                                    <a class="author">Joe Henderson</a>
+                                                    <div class="metadata">
+                                                        <span class="date">5 天以前</span>
+                                                    </div>
+                                                    <div class="text">老兄，这太棒了。非常感谢。 </div>
+                                                    <div class="actions">
+                                                        <a class="reply">回复</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--*/-->
+                                        </div>
+                                    </div>
+                                    <!-- 提交留言 -->
+                                    <div class="ui grey segment" style="margin-bottom: 0;" th:if="${blog.isComment == true}">
+                                        <div id="comment-form" class="ui form">
+                                            <input type="hidden" name="comParentId" value="-1">
+                                            <input type="hidden" name="bid" value="" th:value="${blog.bid}">
+                                            <div class="field">
+                                                <textarea name="content" id="" cols="30" rows="1"  style="resize: none;" placeholder="发表你的看法吧..."></textarea>
+                                            </div>
+                                            <div class="fields">
+                                                <div class="field">
+                                                    <input type="text" name="nickname" placeholder="👽你的姓名">
+                                                </div>
+                                                <div class="field">
+                                                    <input type="text" name="mail" placeholder="📮你的邮箱地址">
+                                                </div>
+                                                <div class="ui field right aligned">
+                                                    <button id="comment-submit-btn" type="button" class="ui secondary button">发表</button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--*/-->
                                     </div>
-                                </div>
-                                <!-- 提交留言 -->
-                                <div class="ui grey segment" style="margin-bottom: 0;" th:if="${blog.isComment == true}">
-                                    <div id="comment-form" class="ui form">
-                                        <input type="hidden" name="comParentId" value="-1">
-                                        <input type="hidden" name="bid" value="" th:value="${blog.bid}">
-                                        <div class="field">
-                                            <textarea name="content" id="" cols="30" rows="1"  style="resize: none;" placeholder="发表你的看法吧..."></textarea>
-                                        </div>
-                                        <div class="fields">
-                                            <div class="field">
-                                                <input type="text" name="nickname" placeholder="👽你的姓名">
+            
+                                    <!-- 留言用户信息卡片 -->
+                                    <div class="ui m-userInfo popup" style="padding: 0;border-radius: 10px;border: 1px solid #2a907adb;">
+                                        <img src="../static/images/userInfo_bg.png" th:src="@{/res/images/userInfo_bg.png}" style="width: inherit; height:45%;border-radius: 10px 10px 0 0;">
+                                        <div class="m-userInfo-cont">
+                                            <div class="">
+                                                <img src="../static/images/del_avatar2.jpg" class="m-userInfo-avatar" th:src="@{/res/images/del_avatar2.jpg}">
                                             </div>
-                                            <div class="field">
-                                                <input type="text" name="mail" placeholder="📮你的邮箱地址">
-                                            </div>
-                                            <div class="ui field right aligned">
-                                                <button id="comment-submit-btn" type="button" class="ui secondary button">发表</button>
+                                            <div class="m-userInfo-info">
+                                                <h4><i class="icon user tiny grey"></i> <span class="m-nickname">mushroom</span></h4>
+                                                <p><i class="icon envelope square tiny grey"></i> <span class="m-mail">mushroom@qq.com</span></p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-        
-                                <!-- 留言用户信息卡片 -->
-                                <div class="ui m-userInfo popup" style="padding: 0;border-radius: 10px;border: 1px solid #2a907adb;">
-                                    <img src="../static/images/userInfo_bg.png" th:src="@{/res/images/userInfo_bg.png}" style="width: inherit; height:45%;border-radius: 10px 10px 0 0;">
-                                    <div class="m-userInfo-cont">
-                                        <div class="">
-                                            <img src="../static/images/del_avatar2.jpg" class="m-userInfo-avatar" th:src="@{/res/images/del_avatar2.jpg}">
-                                        </div>
-                                        <div class="m-userInfo-info">
-                                            <h4><i class="icon user tiny grey"></i> <span class="m-nickname">mushroom</span></h4>
-                                            <p><i class="icon envelope square tiny grey"></i> <span class="m-mail">mushroom@qq.com</span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-      
 
         <!-- 侧边快速导航 -->
         <div id="toolbar" class="m-quicknav-flex">

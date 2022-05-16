@@ -326,6 +326,28 @@ const blogVue = new Vue({
         if (cmd == 1) {
           // TODO 取消点赞
           console.log('取消点赞');
+
+          const {data: res} = await axios({
+            url: baseUrl + "/v2/thumbs-up/cancel",
+            method: 'put',
+            data: {
+              'uid': this.likeDTO.uid,
+              'mid': this.likeDTO.mid,
+              'bid': this.likeDTO.bid
+            },
+            headers: { 
+              token: this.userInfo.token, 
+              'content-type': 'application/json;charset=utf-8'
+            },
+          })
+          if (res.code == 756) {
+            this.isThumbsUp = false
+             // 取消成功后更新点赞数
+             const {data: res2} = await axios.get(baseUrl + '/v2/thumbs-up/get/' + this.article.bid)
+             this.article.likeNum = res2.data
+          } else {
+            this.$message.error('您点击的的太快了')
+          }
         } else if (cmd == 2) {
           // 点赞
           const {data: res} = await axios({
@@ -343,6 +365,9 @@ const blogVue = new Vue({
           })
           if (res.code == 200) {
             this.isThumbsUp = true
+            // 点赞成功后更新点赞数
+            const {data: res2} = await axios.get(baseUrl + '/v2/thumbs-up/get/' + this.article.bid)
+            this.article.likeNum = res2.data
           } else {
             this.$message.error('网络异常')
           }
