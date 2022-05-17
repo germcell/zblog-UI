@@ -24,7 +24,7 @@
                         <a href="index.html" class="item m-item m-mobile-hide m-active-nav">首页</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="选择你感兴趣的文章类型">文章分类</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="热门活动">本站活动</a>
-                        <div class="right item m-item m-mobile-hide" style="height: 50px !important; margin-left: 30% !important;">
+                        <div class="right item m-item m-mobile-hide" style="height: 50px !important; margin-left: 12% !important;">
                             <form class="ui form" method="get" target="_blank">
                                 <div class="ui icon input">
                                     <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
@@ -34,7 +34,7 @@
                         </div>
                         <div class="m-login-commd">
                            <ul v-if="isLogin">
-                               <li style="margin-right: 0;">
+                               <li style="margin-right: 7px;">
                                 <el-dropdown>
                                     <a :href="'private_personal.html?uid='+loginUserID+'&m='+Math.random()" title="个人中心">
                                         <el-avatar :size="35" :src="'images/avatar/'+avatar"></el-avatar>
@@ -46,6 +46,7 @@
                                                         {{wName}}
                                                         <i :class="[isMale?'icon man':'icon woman']" :style="{'color':(isMale?'skyblue':'#fe99ab')}"></i>
                                                     </span>
+                                                    <p class="m-usermail">{{loginUserMail}}</p>
                                                 </el-dropdown-item>
                                             </div> 
                                             <div class="m-login-userInfo"> 
@@ -60,12 +61,12 @@
                                   </el-dropdown>
                                </li>
                                <li style="width: 4em;"><a :href="'private_personal.html?uid='+loginUserID+'&m='+Math.random()" style="color: black;">个人中心</a></li>
+                               <li @click="logout">/ 退出</li>
                                <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
-                               <li class="m-lg" @click="logout">退出</li>
                            </ul> 
-                            <ul v-else>
-                                <li><a href="login.html" class="m-login" title="登录">登录 / </a></li>
-                                <li><a href="register.html" class="m-register" title="去注册">注册</a></li>
+                            <ul class="m-no-login" v-else>
+                                <li><a href="login.html" class="m-login" title="登录">登录</a></li>
+                                <li><a href="register.html" class="m-register" title="去注册">/  注册</a></li>
                                 <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
                             </ul>
                         </div>
@@ -80,7 +81,7 @@
         <!-- 推荐文章/活动 -->
         <div class="m-index-content" style="padding-bottom: 0 !important;">
             <div class="ui container grid">
-                <div class="eleven wide column">
+                <div class="eleven wide column m-clear-lr-pdding">
                     <template v-if="ad.type==1">
                         <div class="ui segment">
                             <div class="ui grid">
@@ -123,7 +124,7 @@
                         
                     </template>
                 </div>
-                <div class="five wide column">
+                <div class="five wide column m-clear-right-pdding">
                     <!-- 热门文章标题 -->
                     <div class="ui segments">
                         <div class="ui secondary segment" style="border-bottom: 3px solid #8080807d;background-color: #fff;padding: 0.7em;">
@@ -154,14 +155,13 @@
                     </div>
                 </div>
             </div>
-          
         </div>
     
         <!-- 主体内容 -->
         <div class="m-index-content" style="padding-top: 0 !important;">
             <div class="ui container">
                 <div class="ui stackable grid">
-                    <!-- 左边 -->
+                    <!-- 左边:推荐文章部分 -->
                     <div class="twelve wide column">
                         <div class="ui top attached segment">
                             <div class="ui two column grid">
@@ -220,7 +220,7 @@
                             </template>
                             <!-- 分页 -->
                             <div class="ui attached segment">
-                                <div class="ui two column center aligned grid m-padding-tiny">
+                                <div id="go-page-top" class="ui two column center aligned grid m-padding-tiny">
                                     <el-pagination
                                         :background="true"
                                         layout="prev, pager, next"
@@ -263,10 +263,17 @@
                                                         <p class="m-rc-cz">发表 {{w.articleNum}} 篇文章 · 粉丝 {{w.fans}}</p>
                                                     </a>
                                                     </div>
-                                                    <div class="m-user-like">
-                                                        <button v-if="w.isFans" class="ui button m-focus-btn m-focus-btn-sub" @click="cancelFans(w.uid)">取关</button>
-                                                        <button v-else class="ui button m-focus-btn" @click="becomeFans(w.uid)">+关注</button>
-                                                    </div>
+                                                    <template v-if="loginUserID==w.uid">
+                                                        <div class="m-user-like">
+                                                            <button class="ui button m-focus-btn" style="background-color: #eb7676 !important;" @click="personalPage(loginUserID)">主页</button>
+                                                        </div> 
+                                                    </template>
+                                                    <template v-else>
+                                                        <div class="m-user-like">
+                                                            <button ref="likeBtn" v-if="w.isFans" class="ui button m-focus-btn m-focus-btn-sub" @click="cancelFans(w.uid)">取关</button>
+                                                            <button ref="likeBtn" v-else class="ui button m-focus-btn" @click="becomeFans(w.uid)">关注</button>
+                                                        </div>
+                                                    </template>
                                                 </div>
                                             </template>
                                         </div>
@@ -337,6 +344,7 @@
     <script src="js/vue.min.js"></script>
     <script src="js/element-ui.js"></script>
     <script src="js/axios.min.js"></script>
+    <script src="js/jquery.scrollTo.min.js"></script>
     <script src="js/my/one.js"></script>
     <script src="js/my/cookie_utils.js"></script>
     <script type="text/javascript">
@@ -347,6 +355,9 @@
         //         }
         //     });
         // }, 7000);
+        $("#go-page-top").on("click", function() {
+                $('html,body').animate({scrollTop: 300}, "300");
+            });
     </script>
 </body>
 </html>

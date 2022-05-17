@@ -2,24 +2,34 @@
 .m-login-content {
   width: 100%;
   height: 100%;
-  background-image: url(../images/del/login_bj6.png);
+  background: url(../images/del/login_bj9.png) no-repeat center;
+  background-size: cover;
 }
 
 .m-register-content {
   position: relative;
   width: 100%;
   height: 100%;
-  background-image: url(../images/del/login_bj7.png);
+  background-repeat: no-repeat;
+  background: url(../images/del/login_bj7.png) no-repeat center;
+  background-size: cover;
 }
 
 .m-login {
-  position: absolute;
+  /* position: absolute;
   top: 3.7em;
   right: 5em;
   width: 21.4em;
   height: 26em;
   background-color: #fff;
-  border-radius: 3px;
+  border-radius: 3px; */
+  position: absolute;
+  top: 10%;
+  right: 220px;
+  width: 27%;
+  height: 80%;
+  background-color: #fff;
+  border-radius: 3px
 }
 
 .m-login .tips {
@@ -36,6 +46,17 @@
 .m-login h3 {
   margin: 2em auto;
   text-align: center;
+}
+
+.m-login .m-login-look {
+  padding: 5% 0 0 75%;
+  width: 85%;
+}
+
+.m-login .m-login-look a {
+  color: #999 !important;
+  font-size: 0.9em !important;
+  text-decoration: none;
 }
 
 .m-login .m-login-up {
@@ -133,4 +154,13 @@
 .r-success h4 a {
   font-size: 0.7em;
   color: rgb(77, 39, 216);
+}
+
+.m-goLoginPage {
+  color:#999; 
+  border: none !important;
+}
+
+.m-goLoginPage:hover {
+  background-color: #fff !important;
 }

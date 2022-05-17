@@ -23,7 +23,7 @@
                     <a href="index.html" class="item m-item m-mobile-hide">首页</a>
                     <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="选择你感兴趣的文章类型">文章分类</a>
                     <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="热门活动">本站活动</a>
-                    <div class="right item m-item m-mobile-hide" style="height: 50px !important;">
+                    <div class="right item m-item m-mobile-hide" style="height: 50px !important; margin-left: 12% !important;">
                         <form class="ui form" method="get" target="_blank" action="">
                             <div class="ui icon input">
                                 <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
@@ -33,7 +33,7 @@
                     </div>
                     <div class="m-login-commd">
                        <ul v-if="userInfo.isLogin">
-                           <li style="margin-right: 0;">
+                           <li style="margin-right: 7px;">
                             <el-dropdown>
                                 <a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" title="个人中心">
                                     <el-avatar :size="35" :src="'images/avatar/'+userInfo.avatar"></el-avatar>
@@ -45,6 +45,7 @@
                                                     {{userInfo.wName}}
                                                     <i :class="[userInfo.isMale?'icon man':'icon woman']" :style="{'color':(userInfo.isMale?'skyblue':'#fe99ab')}"></i>
                                                 </span>
+                                                <p class="m-usermail">{{userInfo.userMail}}</p>
                                             </el-dropdown-item>
                                         </div> 
                                         <div class="m-login-userInfo"> 
@@ -58,13 +59,13 @@
                                 </el-dropdown-menu>
                               </el-dropdown>
                            </li>
-                           <li style="margin-right: 2em; width: 4em;"><a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" style="color: black;">个人中心</a></li>
+                           <li style="width: 4em;"><a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" style="color: black;">个人中心</a></li>
+                           <li @click="logout">/ 退出</li>
                            <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" target="_blank" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
-                           <li class="m-lg" @click="logout">退出</li>
                        </ul> 
-                        <ul v-else>
-                            <li><a href="login.html" class="m-login" title="登录">登录 / </a></li>
-                            <li><a href="register.html" class="m-register" title="去注册">注册</a></li>
+                        <ul class="m-no-login" v-else>
+                            <li><a href="login.html" class="m-login" title="登录">登录</a></li>
+                            <li><a href="register.html" class="m-register" title="去注册">/  注册</a></li>
                             <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
                         </ul>
                     </div>

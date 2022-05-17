@@ -12,6 +12,9 @@ const loginVue = new Vue({
   created() {
     if (location.toString().includes('login.html')) {
       this.msg = decodeURI(getUrlParam('tips'))
+      if (this.msg == 'null' || this.msg == null || this.msg == '') {
+        this.msg = ''
+      }
       this.backUrl = localStorage.getItem('loginBackUrl')
     }
   },
@@ -254,6 +257,9 @@ const registerVue = new Vue({
         return false
       }
     },
+    goLoginPage() {
+      location.href = 'login.html?tips='
+    }
   },
 })
 
@@ -437,11 +443,12 @@ const ppVue = new Vue({
       const uid = getUrlParam('uid')
       if (uid == null || uid == '') {
         location.href = '404.html'
+        console.log(111);
         return
       }
       this.userInfo = getLoginUserMsg()
       if (this.userInfo.loginUserID != uid) {
-        location.href = '404.html'
+        location.href = 'login.html?tips=身份已过期，请重新登录'
         return 
       }
       const {data: res} = await axios.get(baseUrl + '/v2/lr/isLogin',{
@@ -450,7 +457,7 @@ const ppVue = new Vue({
         }
       })
       if (res.code == 501) {
-        location.href = 'login.html?tip=身份已过期，请重新登录'
+        location.href = 'login.html?tips=身份已过期，请重新登录'
         return 
       }
       const {data:res2} = await axios.get(baseUrl + '/v2/lr/' + this.userInfo.loginUserID,{
@@ -459,7 +466,7 @@ const ppVue = new Vue({
         }
       })
       if (res2.code == 501) {
-        location.href = 'login.html?tip=身份已过期，请重新登录'
+        location.href = 'login.html?tips=身份已过期，请重新登录'
         return 
       }
       if (res2.code == 404) {
@@ -733,7 +740,7 @@ const ppVue = new Vue({
         })
         console.log(res4);
         if (res4.code == 501 || res4.code == 500) {
-          location.href = 'login.html?tip=身份已过期，请重新登录&md=' + Math.random()
+          location.href = 'login.html?tips=身份已过期，请重新登录&md=' + Math.random()
           return
         }
         if (res4.code == 538) {
@@ -752,11 +759,11 @@ const ppVue = new Vue({
         return
       }
       if (code == 501 || code == 500) {
-        location.href = 'login.html?tip=身份已过期，请重新登录&md=' + Math.random()
+        location.href = 'login.html?tips=身份已过期，请重新登录&md=' + Math.random()
         return
       }
       if (code == 404) {
-        location.href = '404.html?tip=用户不存在'
+        location.href = '404.html?tips=用户不存在'
         return
       }
       if (code == 525 || code == 505 || code == 525) {
@@ -847,9 +854,10 @@ const indexVue = new Vue({
     avatar: '',
     token: '',
     loginUserID: '',
+    loginUserMail: '',
     articleNum: 0,
     fans: 0,
-    alreadyFollow: []
+    // alreadyFollow: []
   },
   async created() {
     if (location.toString().includes('index.html')) {
@@ -871,24 +879,30 @@ const indexVue = new Vue({
           this.avatar = getCookie('userAvatar')
           this.articleNum = getCookie('articleNum')
           this.fans = getCookie('fans')
+          this.loginUserMail = getCookie('userMail')
           if (getCookie('userSex') === 'male') {
             this.isMale = true
           }
+          // 默认将推荐作者关注状态置为未关注
+          this.writers.forEach((item) => {
+            item.isFans = false
+          })
 
           // 3.判断当前登录用户和推荐作者的关系（是否关注）
+          // 集合 [1,2,3,4]
           const {data: res2} = await axios.get(
             baseUrl + '/v2/fans/list/' + this.loginUserID,
             { headers: {token: this.token}})
-
-            this.writers.forEach((item) => {
-              item.isFans = false
-              res2.data.some((item2) => {
-                if (item.uid == item2.uid2) {
-                  item.isFans = true
-                  return true
-                }
+            if (res2.data != null || res2.length > 0) {
+              this.writers.forEach((item) => {
+                res2.data.some((item2) => {
+                  if (item.uid == item2) {
+                    item.isFans = true
+                    return true
+                  }
+                })
               })
-            })
+            } 
         }
         // 4.排行榜记录分页
         this.hotBlogPageInfo.pages = (this.hotBlogPageInfo.list.length % 5) == 0 ? (this.hotBlogPageInfo.list.length) / 5 : Number.parseInt(this.hotBlogPageInfo.list.length / 5 + 1)
@@ -950,17 +964,13 @@ const indexVue = new Vue({
       }
     },
     async becomeFans(uid) {
-      if (this.alreadyFollow.includes(uid)) {
-        this.$message('你已经关注过了哟')
-        return
-      }
       if (this.isLogin) {
         const {data: res} = await axios({
           url: baseUrl + '/v2/fans/add',
           method: 'post',
           data: {
-            uid: this.loginUserID,
-            uid2: uid
+            uid: uid,
+            uid2: this.loginUserID
           },
           headers: {
             token: this.token,
@@ -968,11 +978,19 @@ const indexVue = new Vue({
           }
         })
         if (res.code == 200) {
+          this.writers.some((item, index) => {
+            if (item.uid == res.data.uid) {
+              // 数据更改后立马渲染页面，能实现效果，原理不理解，但效果指生效一次，取关操作同样
+              item.isFans = true
+              this.$set(item, item.isFans, true)
+              return true
+            }
+          })
           this.$message.success('关注成功')
-          this.alreadyFollow.push(uid)
         } else if (res.code == 701) {
           this.$message('已经关注过了哟')
         } else {
+          // 参数为null
           this.$message.error('关注失败，请检查网络是否通畅')
         }
       } else {
@@ -983,15 +1001,32 @@ const indexVue = new Vue({
       const {data: res} = await axios({
         url: baseUrl + '/v2/fans/delete',
         method: 'delete',
-        data: { uid: this.loginUserID, uid2: uid },
-        headers: { token: this.token, 'content-type': 'application/json' }
+        data: {
+          uid: uid, 
+          uid2: this.loginUserID 
+        },
+        headers: { 
+          token: this.token,
+          'content-type': 'application/json' }
       })
+
       if (res.code == 200) {
+        this.writers.some((item, index) => {
+          if (item.uid == res.data.uid) {
+            item.isFans = false
+            this.$set(item, item.isFans, false)
+            return true
+          }
+        })
         this.$message('取关成功')
-        this.alreadyFollow.pop(uid)
+      } else if (res.code == 702) {
+        this.$message('关注失败，请刷新后重试')
       } else {
-        this.$message.error('取关失败')
+        this.$message.error('关注失败，请检查网络是否通畅')
       }
+    },
+    personalPage(loginUid) {
+      location.href = 'private_personal.html?uid=' + loginUid + '&,fsd=' + Math.random() 
     }
   }
 })
@@ -1007,6 +1042,7 @@ const baVue = new Vue({
     avatar: '',
     token: '',
     loginUserID: '',
+    loginUserMail: '',
     articleNum: 0,
     fans: 0,
     isLogin: false,
@@ -1044,6 +1080,7 @@ const baVue = new Vue({
           this.wName = getCookie('userName')
           this.userMail = getCookie('userMail')
           this.fans = getCookie('fans')
+          this.loginUserMail = getCookie('userMail')
           getCookie('articleNum')
           if (getCookie('userSex') === 'male') {
             this.isMale = true
