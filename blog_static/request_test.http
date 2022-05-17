@@ -1,0 +1,3 @@
+@BASR_URL = http://127.0.0.1:7860
+
+GET {{BASR_URL}}/v2/fans/list/7 

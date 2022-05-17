@@ -86,15 +86,15 @@
             <div class="ui container grid m-container m-newblog-content animated fadeIn">
                 <div class="five wide column">
                     <div class="ui segment">
+                        <p class="m-tocbot">热门文章</p>
+                        <!-- TODO 热门文章数据查询 -->
+                    </div>
+                    <div class="ui segment">
                         <p class="m-tocbot">目录</p>
                         <div class="ui showToc" >
                             <ol class="js-toc">
                             </ol>
                         </div>
-                    </div>
-                    <div class="ui segment">
-                        <p class="m-tocbot">热门文章</p>
-                        <!-- TODO 热门文章数据查询 -->
                     </div>
                 </div>
                 <div class="eleven wide column">
@@ -104,7 +104,7 @@
                                     <!--   作者、文章基本信息  -->
                                     <div class="m-user-info-flex">
                                         <div class="ui m-avatar" style="font-size: 1.6em !important; margin-right: 1em;">
-                                            <a href="#" target="_blank">
+                                            <a href="javascript:;" @click="getUserInfo(writer.uid)">
                                                 <img :src="'images/avatar/'+writer.writerAvatar" class="ui avatar image" alt="">
                                                 <span> {{writer.writerName}} </span>
                                             </a>
@@ -126,7 +126,7 @@
                                 </div>
                                 <template v-if="article.firstPicture!=null && article.firstPicture!=''">
                                     <div class="ui segment">
-                                        <img :src="'images/fp/'+article.firstPicture" alt="" class="ui fluid rounded image" style="height: 457px;" th:src="${blog.firstPicture}">
+                                        <img :src="'images/fp/'+article.firstPicture" alt="" class="ui fluid rounded image" style="height: 457px;">
                                     </div>
                                 </template>
                                 <!-- 内容 -->
@@ -436,7 +436,6 @@
                     postComment();
                 }
             });
-
             $('#comment-form').form({
                 fields: {
                     content : {
@@ -462,7 +461,6 @@
                     }
                 }
             });
-
             /*------------赞赏:显示二维码------------- */
             $('#appreciate').popup({
                 popup : $('.showQR'),
