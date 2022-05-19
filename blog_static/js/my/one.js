@@ -278,13 +278,14 @@ const blogVue = new Vue({
   el: "#blog-container",
   data: {
     isThumbsUp: false,
-    article: {},
-    category: {},
-    copyright: {},
-    writer: {},
-    userInfo: {},
-    isLogin: false,
-    likeDTO: {},
+    article: {},     // 文章信息
+    hotArticles: [], // 热门文章信息
+    category: {},    // 文章分类信息
+    copyright: {},   // 文章版权信息
+    writer: {},      // 文章作者信息
+    userInfo: {},    // 当前登录用户信息
+    isLogin: false,  // 是否登录
+    likeDTO: {},     // 点赞请求体信息
   },
   async created() {
     if (location.toString().includes("blog.html")) {
@@ -299,6 +300,8 @@ const blogVue = new Vue({
           this.category = res.data.category;
           this.copyright = res.data.copyright;
           this.writer = res.data.writer;
+          this.hotArticles = res.data.hotArticlesList
+          
           $("title").text(this.article.title + "-" + $("title").text());
           // 查询点赞状态
           this.userInfo = getLoginUserMsg();
@@ -365,7 +368,6 @@ const blogVue = new Vue({
             this.$message.error("您点击的的太快了");
           }
         } else if (cmd == 2) {
-          // TODO 点赞
           const { data: res } = await axios({
             url: baseUrl + "/v2/thumbs-up",
             method: "post",
@@ -1036,12 +1038,30 @@ const indexVue = new Vue({
               return true;
             }
           });
-          this.$message.success("关注成功");
+          this.$notify({
+            title: "成功",
+            message: "已成功关注该用户",
+            type: "success",
+            offset: 80,
+            duration: 2000,
+          });
         } else if (res.code == 701) {
-          this.$message("已经关注过了哟");
+          this.$notify({
+            title: "提示",
+            message: "已经关注过了哟",
+            type: "info",
+            offset: 80,
+            duration: 2000,
+          });
         } else {
           // 参数为null
-          this.$message.error("关注失败，请检查网络是否通畅");
+          this.$notify({
+            title: "错误",
+            message: "关注失败，请检查网络是否通畅",
+            type: "error",
+            offset: 80,
+            duration: 2000,
+          });
         }
       } else {
         location.href = "login.html?tips=请先登录";
@@ -1069,11 +1089,29 @@ const indexVue = new Vue({
             return true;
           }
         });
-        this.$message("取关成功");
+        this.$notify({
+          title: "成功",
+          message: "已取消关注",
+          type: "success",
+          offset: 80,
+          duration: 2000,
+        });
       } else if (res.code == 702) {
-        this.$message("关注失败，请刷新后重试");
+        this.$notify({
+          title: "提示",
+          message: "关注失败，请刷新后重试",
+          type: "info",
+          offset: 80,
+          duration: 2000,
+        });
       } else {
-        this.$message.error("关注失败，请检查网络是否通畅");
+        this.$notify({
+          title: "错误",
+          message: "关注失败，请检查网络是否通畅",
+          type: "error",
+          offset: 80,
+          duration: 2000,
+        });
       }
     },
     personalPage(loginUid) {

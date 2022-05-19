@@ -85,14 +85,22 @@
         <div class="m-blog-bj">
             <div class="ui container grid m-container m-newblog-content animated fadeIn">
                 <div class="five wide column">
-                    <div class="ui segment">
-                        <p class="m-tocbot">热门文章</p>
-                        <!-- TODO 热门文章数据查询 -->
-                    </div>
-                    <div class="ui segment">
+                    <template v-if="hotArticles!=null&&hotArticles.length>0">
+                        <div class="ui segment" style="padding-bottom: 0em;">
+                            <p class="m-tocbot">热门文章</p>
+                            <div>
+                                <ul>
+                                    <li class="m-hotArticle" v-for="ha in hotArticles" :key="ha.did">
+                                        <a href="javascript:;">{{ha.title}} <i class="icon eye"> <span>{{ha.views}}</span></i> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </template>
+                    <div id="m-tocbot-fixed" class="ui segment">
                         <p class="m-tocbot">目录</p>
-                        <div class="ui showToc" >
-                            <ol class="js-toc">
+                        <div class="ui showToc">
+                            <ol class="js-toc" style="padding-left: 20px;">
                             </ol>
                         </div>
                     </div>
@@ -493,10 +501,11 @@
                 // 指定以 class 为 js-toc-content 的容器中的内容需生成目录
                 contentSelector: '.js-toc-content',
                 // 指定哪些标签作为目录生成依据
-                headingSelector: 'h1, h2, h3, h4, h5',
+                headingSelector: 'h1, h2, h3, h4',
                 // For headings inside relative or absolute positioned containers within content.
                 hasInnerContainers: true,
             });
+            tocbot.refresh();
             /*------------目录:显示文章目录------------- */
             // $('#showToc').popup({
             //     popup : $('.showToc'),
@@ -520,6 +529,18 @@
                 // $(document).scrollTop(0).slideDown("slow")
                 $('html,body').animate({scrollTop: 0}, "slow");
             });
+            /* 目录固定定位 */
+            $(window).scroll(function() {
+                let top = $(document).scrollTop() 
+                if (top > 360) {
+                    $('#m-tocbot-fixed').addClass('m-tocbot-fixed')
+                    $('.js-toc li a').addClass('m-tocbot-content')
+                } else {
+                    $('#m-tocbot-fixed').removeClass('m-tocbot-fixed')
+                    $('.js-toc li a').removeClass('m-tocbot-content')
+                }
+            })
+
         })
     </script>
 

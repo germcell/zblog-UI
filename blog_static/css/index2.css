@@ -25,9 +25,10 @@
   border-radius: 3px; */
   position: absolute;
   top: 10%;
-  right: 220px;
-  width: 27%;
-  height: 80%;
+  right: 200px;
+  width: 26%;
+  /* height: 80%; */
+  /* height: 240px; */
   background-color: #fff;
   border-radius: 3px
 }
@@ -49,8 +50,12 @@
 }
 
 .m-login .m-login-look {
-  padding: 5% 0 0 75%;
-  width: 85%;
+  float: right;
+  margin-right: 10% ;
+  margin-top: 1em ;
+  margin-bottom: 4em ;
+  /* padding: 5% 0 0 75%;
+  width: 85%; */
 }
 
 .m-login .m-login-look a {
@@ -70,7 +75,9 @@
 }
 
 .m-login .m-forgetpwd {
-  padding-left: 21em;
+  /* padding-left: 21em; */
+  float: right;
+  margin-bottom: 1.5em;
   font-size: 0.7em;
   color: #605c5c;
   text-decoration: none;

@@ -1,3 +1,16 @@
+/* #index-container {
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+} */
+
+@font-face {
+  font-family: Emoji;
+  src: local("Apple Color Emojiji"), local("Segoe UI Emoji"), local("Segoe UI Symbol"), local("Noto Color Emoji");
+  unicode-range: U+1F000-1F644, U+203C-3299;
+}
+body {
+  font-family: system-ui, —apple-system, Segoe UI, Rototo, Emoji, Helvetica, Arial, sans-serif;
+}
+
  li {
    list-style: none;
  }
@@ -140,7 +153,8 @@ h3:hover {
 }
 
 .m-avatar span {
-  color: rgb(24, 152, 161);
+  font-weight: 700;
+  color: rgba(0, 0, 0, .4);
 }
 
 .m-calendar {
@@ -156,7 +170,7 @@ h3:hover {
 .m-blogtext {
   margin-top: 0.5em;
   margin-bottom: 0;
-  letter-spacing: 1px;
+  /* letter-spacing: 1px; */
   color: rgb(101 91 91);
   font-size: 1.06em;
   /*font-family: SimHei;*/
@@ -736,10 +750,6 @@ h3:hover {
   font-size: 0.9em;
 }
 
-#index-container {
-  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-}
-
 /* 个人主页(私\共) */
 .m-personal-content {
   padding: 6em 10em 3em 10em !important;
@@ -907,7 +917,7 @@ h3:hover {
 
 .m-tocbot {
   padding-bottom: 0.5em;
-  font-weight: 700;
+  font-weight: 400;
   font-size: 1.1em;
   border-bottom: 2px solid #d0ccccde;
 }
@@ -931,4 +941,56 @@ h3:hover {
   margin: 0 auto 0.5em auto;
   color: #999;
   font-size: 0.9em;
+}
+
+/* 用户热门文章 */
+.m-newblog-content ul {
+  padding-left: 0;
+}
+.m-newblog-content .m-hotArticle {
+  margin-top: 7px;
+  padding: 3px;
+  text-align: left;
+}
+
+.m-newblog-content .m-hotArticle a {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: rgb(85, 86, 102);
+  font-weight: 400;
+}
+
+.m-newblog-content .m-hotArticle a i {
+  margin-left: 1em;
+  color: #9999998c;
+  font-size: 0.8em;
+}
+
+.m-newblog-content .m-hotArticle a i span {
+  padding-left: 5px;
+}
+
+.m-newblog-content .m-hotArticle:hover {
+  background-color: #9999991d;
+  border-radius: 3px;
+}
+
+/* 目录固定定位 */
+.m-tocbot-fixed {
+  position: fixed !important;
+  top: 54px;
+  /* width: 26.4%; */
+  width: 333px;
+ 
+}
+
+.m-tocbot-content {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
