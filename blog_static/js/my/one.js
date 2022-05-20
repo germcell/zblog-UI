@@ -436,6 +436,15 @@ const blogVue = new Vue({
       }
     }
   },
+  watch: {
+    /* 侦听文章数据，如果数据变化则触发代码高亮插件（prism）和（tocbot），否则代码高亮和目录不会生效 */
+    article(newValue, oldValue) {
+      this.$nextTick(() => {
+        Prism.highlightAll()
+        tocbot.refresh();
+      })
+    }
+  }
 });
 
 /* private_personal.html vue实例 */
@@ -771,7 +780,6 @@ const ppVue = new Vue({
             "Content-type": "multipart/form-data",
           },
         });
-        console.log(res4);
         if (res4.code == 501 || res4.code == 500) {
           location.href =
             "login.html?tips=身份已过期，请重新登录&md=" + Math.random();
@@ -779,7 +787,7 @@ const ppVue = new Vue({
         }
         if (res4.code == 538) {
           setCookie("userAvatar", res4.data);
-          this.$message.success("修改成功");
+          this.$message.success("修改成功，请刷新");
         } else {
           this.$message.error("提交失败，请检查网络是否通畅");
         }

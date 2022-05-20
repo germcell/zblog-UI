@@ -91,7 +91,7 @@
                             <div>
                                 <ul>
                                     <li class="m-hotArticle" v-for="ha in hotArticles" :key="ha.did">
-                                        <a href="javascript:;">{{ha.title}} <i class="icon eye"> <span>{{ha.views}}</span></i> </a>
+                                        <a :href="'blog.html?bid='+ha.did+'&sdakg='+Math.random()">{{ha.title}} <i class="icon eye"> <span>{{ha.views}}</span></i> </a>
                                     </li>
                                 </ul>
                             </div>
