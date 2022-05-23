@@ -12,25 +12,25 @@
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <div id="index-container">
+    <div id="index-container" style="display: none;" :style="{display: 'block'}">
         <!-- 导航 -->
         <div class="nav-flexed">
             <nav class="ui attached segment m-navpd">
                 <div class="ui container">
                     <div class="ui inverted secondary menu stackable m-navpd-child">
                         <a href="index.html">
-                            <img src="images/del/logo.png" class="m-logo" title="ZBLOG首页">
+                            <img src="images/del/logo.png" class="m-logo" title="ZBLOG首页!">
                         </a>
                         <a href="index.html" class="item m-item m-mobile-hide m-active-nav">首页</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="选择你感兴趣的文章类型">文章分类</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="热门活动">本站活动</a>
                         <div class="right item m-item m-mobile-hide" style="height: 50px !important; margin-left: 12% !important;">
-                            <form class="ui form" method="get" target="_blank">
+                            <!-- <form class="ui form" method="get" target="_blank"> -->
                                 <div class="ui icon input">
-                                    <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
-                                    <i class="search link icon"></i>
+                                    <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" v-model="keyword" @keydown="searchEnter($event)">
+                                    <i class="search link icon" @click="searchClick()"></i>
                                 </div>
-                            </form>
+                            <!-- </form> -->
                         </div>
                         <div class="m-login-commd">
                            <ul v-if="isLogin">
@@ -318,21 +318,21 @@
                     </div>
                     <div class="three wide column">
                         <h4 class="ui inverted header">联系我</h4>
-                        <p class="copyright">Gitee : germcell</p>
-                        <p class="copyright right aligned">WeChat : z_Cricket</p>
+                        <p class="copyright"></p>
+                        <p class="copyright right aligned"></p>
                     </div>
                     <div class="three wide column">
                         <h4 class="ui inverted header">本站声明</h4>
-                        <p class="copyright">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                        <p class="copyright"></p>
                     </div>
                     <div class="seven wide column">
                         <h4 class="ui inverted header">开发日志</h4>
-                        <p class="copyright">1.xxxxxxxx</p>
+                        <p class="copyright"></p>
                     </div>
                 </div>
                 <div class="ui inverted section divider"></div>
                 <p class="copyright">Copyright &copy; 2022</p>
-                <p class="copyright">https://gitee.com/germcell/blog.git</p>
+                <p class="copyright"></p>
             </div>
         </footer>
     </div>

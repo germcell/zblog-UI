@@ -5,13 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.ico" >
-    <title>搜索</title>
+    <title>ZBLOG搜索</title>
+    <link rel="stylesheet" href="css/element-ui.css">
     <link rel="stylesheet" href="css/semantic.min.css">
     <link rel="stylesheet" href="dist/components/icon.min.css">
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <div id="search-container">
+    <div id="search-container" style="display: none;" :style="{display: 'block'}">
         <div class="nav-flexed">
             <nav class="ui attached segment m-navpd">
                 <div class="ui container">
@@ -22,19 +23,48 @@
                         <a href="index.html" class="item m-item m-mobile-hide">首页</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="选择你感兴趣的文章类型">文章分类</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="热门活动">本站活动</a>
-                        <div class="right item m-item m-mobile-hide" style="height: 50px !important;">
-                            <form class="ui form" method="get" target="_blank" action="" th:action="@{/blog/condition/page/1}">
-                                <div class="ui icon input">
-                                    <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
-                                    <i class="search link icon"></i>
-                                </div>
-                            </form>
+                        <div class="right item m-item m-mobile-hide" style="height: 50px !important; margin-left: 12% !important">
+                        <div class="ui icon input">
+                            <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" v-model="keyword" @keydown="searchEnter($event)">
+                            <i class="search link icon" @click="searchClick()"></i>
+                        </div>
                         </div>
                         <div class="m-login-commd">
-                            <ul>
-                                <li><a href="login.html" class="m-login" title="登录">登录 / </a></li>
-                                <li><a href="register.html" class="m-register" title="去注册">注册</a></li>
-                                <li class="m-write-hover" title="记录你的日常、学习"><a class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                           <ul v-if="isLogin">
+                               <li style="margin-right: 7px;">
+                                <el-dropdown>
+                                    <a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" title="个人中心">
+                                        <el-avatar :size="35" :src="'images/avatar/'+userInfo.avatar"></el-avatar>
+                                    </a>
+                                    <el-dropdown-menu slot="dropdown">
+                                            <div class="m-login-userInfo"> 
+                                                <el-dropdown-item disabled>
+                                                    <span class="m-wn">
+                                                        {{userInfo.wName}}
+                                                        <i :class="[userInfo.isMale?'icon man':'icon woman']" :style="{'color':(userInfo.isMale?'skyblue':'#fe99ab')}"></i>
+                                                    </span>
+                                                    <p class="m-usermail">{{userInfo.userMail}}</p>
+                                                </el-dropdown-item>
+                                            </div> 
+                                            <div class="m-login-userInfo"> 
+                                                <el-dropdown-item disabled>
+                                                   <ul class="m-af">
+                                                       <li>文章: {{userInfo.articleNum}}</li>
+                                                       <li>粉丝: {{userInfo.fans}}</li>
+                                                   </ul> 
+                                                </el-dropdown-item>
+                                            </div>  
+                                    </el-dropdown-menu>
+                                  </el-dropdown>
+                               </li>
+                               <li style="width: 4em;"><a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" style="color: black;">个人中心</a></li>
+                               <li @click="logout">/ 退出</li>
+                               <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                           </ul> 
+                            <ul class="m-no-login" v-else>
+                                <li><a href="login.html" class="m-login" title="登录">登录</a></li>
+                                <li><a href="register.html" class="m-register" title="去注册">/  注册</a></li>
+                                <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
                             </ul>
                         </div>
                     </div>
@@ -45,289 +75,126 @@
             </nav>
         </div>
         <!-- 主体内容 -->
-        <div class="m-content m-padding-big" style="padding-bottom: 5em !important;">
-            <div class="ui container">
-                <div class="ui top attached segment">
-                    <div class="ui two column grid">
-                        <div class="column">
-                            <h3 class="ui blue header">搜索结果</h3>
-                        </div>
-                        <div class="column right aligned">
-                            共 <span class="blogCount" th:text="${pageInfo.total}">14</span> 篇
-                        </div>
-                    </div>
-                </div>
-                <div class="ui attached teal segment">
-                    <!-- 博客展示模板 -->
-                    <div class="ui attached segment m-padding-small">
-                        <div class="ui mobile reversed stackable grid">
-                            <div class="ten wide column" style="padding-right: 0 !important;">
-                                <a href="javascript:;" target="_blank" th:href="@{/blog/view/{bid}(bid=${blog.bid})}">
-                                    <h3 class="ui header" th:text="${blog.title}">你真正的理解财富自由吗?</h3>
-                                </a>
-                                <p class="m-blogtext m-overflow-blog-search" th:text="${blog.blogOutline.outline}">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的fsdfsdfsdafasdfsadfsadfsafasdfffffffffffffffffffffff...</p>
-                                <div class="ui mini m-infobox">
-                                    <div class="m-info">
-                                        <div class="m-avatar">
-                                            <a href="#" target="_blank">
-                                                <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="" th:src="${blog.user.avatar}">
-                                                <span th:text="${blog.user.nickname}"> Marry </span>
-                                            </a>
-                                        </div>
-                                        <div class="m-calendar">
-                                            <i class="calendar icon"></i> <span th:text="${#dates.format(blog.writeTime, 'yyyy-MM-dd HH:mm')}">2022.2.18 12:23</span>
-                                        </div>
-                                        <div class="m-eye">
-                                            <i class="thumbs up icon"></i> <span>2321</span>
-                                        </div>
-                                        <div class="m-eye">
-                                            <i class="eye icon"></i> <span th:text="${blog.views}">232</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="one wide column" style="width: 10px !important;"></div>
-                            <div class="five wide column">
-                                <a href="javascript:;" target="_blank" th:href="@{/blog/view/{bid}(bid=${blog.bid})}">
-                                    <img src="images/del/del_bj3.png" class="ui image rounded m-blog-img-size" alt="丢失">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- <div class="ui attached segment m-padding-small">
-                        <div class="ui mobile reversed stackable grid">
-                            <div class="ten wide column" style="padding-right: 0 !important;">
-                                <a href="javascript:;" target="_blank">
-                                    <h3 class="ui header" th:text="${blog.title}">你真正的理解财富自由吗?</h3>
-                                </a>
-                                <p class="m-blogtext m-overflow-blog" th:text="${blog.blogOutline.outline}">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的fsdfsdfsdafasdfsadfsadfsafasdfffffffffffffffffffffff...</p>
-                                <div class="ui mini m-infobox">
-                                    <div class="m-info">
-                                        <div class="m-avatar">
-                                            <a href="#" target="_blank">
-                                                <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="" th:src="${blog.user.avatar}">
-                                                <span th:text="${blog.user.nickname}"> Marry </span>
-                                            </a>
-                                        </div>
-                                        <div class="m-calendar">
-                                            <i class="calendar icon"></i> <span th:text="${#dates.format(blog.writeTime, 'yyyy-MM-dd HH:mm')}">2022.2.18 12:23</span>
-                                        </div>
-                                        <div class="m-eye">
-                                            <i class="thumbs up icon"></i> <span>2321</span>
-                                        </div>
-                                        <div class="m-eye">
-                                            <i class="eye icon"></i> <span th:text="${blog.views}">232</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="one wide column" style="width: 10px !important;"></div>
-                            <div class="five wide column">
-                                <a href="javascript:;" target="_blank">
-                                    <img src="../static/images/blogPicture/del_blog_img2.jpg" class="ui image rounded m-blog-img-size" alt="丢失" th:unless="${blog.firstPicture eq null || blog.firstPicture == ''}" th:src="${blog.firstPicture}">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ui attached segment m-padding-small">
-                        <div class="ui mobile reversed stackable grid">
-                            <div class="ten wide column" style="padding-right: 0 !important;">
-                                <a href="javascript:;" target="_blank">
-                                    <h3 class="ui header" th:text="${blog.title}">你真正的理解财富自由吗?</h3>
-                                </a>
-                                <p class="m-blogtext m-overflow-blog" th:text="${blog.blogOutline.outline}">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的fsdfsdfsdafasdfsadfsadfsafasdfffffffffffffffffffffff...</p>
-                                <div class="ui mini m-infobox">
-                                    <div class="m-info">
-                                        <div class="m-avatar">
-                                            <a href="#" target="_blank">
-                                                <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="" th:src="${blog.user.avatar}">
-                                                <span th:text="${blog.user.nickname}"> Marry </span>
-                                            </a>
-                                        </div>
-                                        <div class="m-calendar">
-                                            <i class="calendar icon"></i> <span th:text="${#dates.format(blog.writeTime, 'yyyy-MM-dd HH:mm')}">2022.2.18 12:23</span>
-                                        </div>
-                                        <div class="m-eye">
-                                            <i class="thumbs up icon"></i> <span>2321</span>
-                                        </div>
-                                        <div class="m-eye">
-                                            <i class="eye icon"></i> <span th:text="${blog.views}">232</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="one wide column" style="width: 10px !important;"></div>
-                            <div class="five wide column">
-                                <a href="javascript:;" target="_blank">
-                                    <img src="../static/images/blogPicture/del_blog_img2.jpg" class="ui image rounded m-blog-img-size" alt="丢失" th:unless="${blog.firstPicture eq null || blog.firstPicture == ''}" th:src="${blog.firstPicture}">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ui attached segment m-padding-small">
-                        <div class="ui mobile reversed stackable grid">
-                            <div class="ten wide column" style="padding-right: 0 !important;">
-                                <a href="javascript:;" target="_blank">
-                                    <h3 class="ui header" th:text="${blog.title}">你真正的理解财富自由吗?</h3>
-                                </a>
-                                <p class="m-blogtext m-overflow-blog" th:text="${blog.blogOutline.outline}">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的fsdfsdfsdafasdfsadfsadfsafasdfffffffffffffffffffffff...</p>
-                                <div class="ui mini m-infobox">
-                                    <div class="m-info">
-                                        <div class="m-avatar">
-                                            <a href="#" target="_blank">
-                                                <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="" th:src="${blog.user.avatar}">
-                                                <span th:text="${blog.user.nickname}"> Marry </span>
-                                            </a>
-                                        </div>
-                                        <div class="m-calendar">
-                                            <i class="calendar icon"></i> <span th:text="${#dates.format(blog.writeTime, 'yyyy-MM-dd HH:mm')}">2022.2.18 12:23</span>
-                                        </div>
-                                        <div class="m-eye">
-                                            <i class="thumbs up icon"></i> <span>2321</span>
-                                        </div>
-                                        <div class="m-eye">
-                                            <i class="eye icon"></i> <span th:text="${blog.views}">232</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="one wide column" style="width: 10px !important;"></div>
-                            <div class="five wide column">
-                                <a href="javascript:;" target="_blank">
-                                    <img src="../static/images/blogPicture/del_blog_img2.jpg" class="ui image rounded m-blog-img-size" alt="丢失" th:unless="${blog.firstPicture eq null || blog.firstPicture == ''}" th:src="${blog.firstPicture}">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ui attached segment m-padding-small">
-                        <div class="ui mobile reversed stackable grid">
-                            <div class="ten wide column" style="padding-right: 0 !important;">
-                                <a href="javascript:;" target="_blank">
-                                    <h3 class="ui header" th:text="${blog.title}">你真正的理解财富自由吗?</h3>
-                                </a>
-                                <p class="m-blogtext m-overflow-blog" th:text="${blog.blogOutline.outline}">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的fsdfsdfsdafasdfsadfsadfsafasdfffffffffffffffffffffff...</p>
-                                <div class="ui mini m-infobox">
-                                    <div class="m-info">
-                                        <div class="m-avatar">
-                                            <a href="#" target="_blank">
-                                                <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="" th:src="${blog.user.avatar}">
-                                                <span th:text="${blog.user.nickname}"> Marry </span>
-                                            </a>
-                                        </div>
-                                        <div class="m-calendar">
-                                            <i class="calendar icon"></i> <span th:text="${#dates.format(blog.writeTime, 'yyyy-MM-dd HH:mm')}">2022.2.18 12:23</span>
-                                        </div>
-                                        <div class="m-eye">
-                                            <i class="thumbs up icon"></i> <span>2321</span>
-                                        </div>
-                                        <div class="m-eye">
-                                            <i class="eye icon"></i> <span th:text="${blog.views}">232</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="one wide column" style="width: 10px !important;"></div>
-                            <div class="five wide column">
-                                <a href="javascript:;" target="_blank">
-                                    <img src="../static/images/blogPicture/del_blog_img2.jpg" class="ui image rounded m-blog-img-size" alt="丢失" th:unless="${blog.firstPicture eq null || blog.firstPicture == ''}" th:src="${blog.firstPicture}">
-                                </a>
-                            </div>
-                        </div>
-                    </div> -->
-
-                    <!-- 尾部:分页部分 -->
-                    <div class="ui attached segment">
+        <div class="m-index-content">
+            <div class="ui container grid">
+                <div class="eleven wide column">
+                    <div class="ui top attached segment">
                         <div class="ui two column grid">
-                            <div class="column center aligned">
-                                <a class="ui small button center aligned" href="javascript:;" data-cp="" th:data-cp="${pageInfo.prePage}" th:unless="${pageInfo.isFirstPage eq true}" th:href="@{/blog/condition/page/{currentPage}(currentPage=${pageInfo.prePage},search=${search})}">上一页</a>
+                            <div class="column">
+                                <h3 class="ui header">搜索-{{keyword}}</h3>
+                                <p style="font-size: 0.5em; color: #999;">相关结果约 <span class="blogCount">{{pageInfo.total}}</span> 个</p>
                             </div>
-                            <div class="column center aligned">
-                                <a class="ui small secondary button" href="javascript:;" data-cp="" th:data-cp="${pageInfo.nextPage}" th:unless="${pageInfo.isLastPage eq true}" th:href="@{/blog/condition/page/{currentPage}(currentPage=${pageInfo.nextPage},search=${search})}">下一页</a>
+                            <div class="column right aligned">
+                                <el-dropdown trigger="click">
+                                    <span class="el-dropdown-link">
+                                      筛选<i class="el-icon-arrow-down el-icon--right"></i>
+                                    </span>
+                                    <el-dropdown-menu slot="dropdown">
+                                      <el-dropdown-item @click.native="searchArticle(1)">文章</el-dropdown-item>
+                                      <el-dropdown-item @click.native="searchUser()">用户</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
                             </div>
                         </div>
                     </div>
+                    <div class="ui attached black segment">
+                        <!-- 博客展示模板 -->
+                        <div class="ui attached segment m-padding-small">
+                            <div class="ui mobile reversed stackable grid">
+                                <template v-if="pageInfo.list==null">
+                                    <div class="ui right aligned six wide column m-padding-large">
+                                        <img src="images/del/ic_empty_monkey@2x.7a805c2e.png" width="120" height="87" alt="">
+                                    </div>
+                                    <div class="ten wide column m-padding-large">
+                                        <p class="m-search-msg">抱歉，没有找到与 "<span>{{keyword}}</span>" 相关的内容，换个搜索词试试~</p> 
+                                    </div>
+                                </template>
+                                <template v-else v-for="searchArticle in pageInfo.list" :key="searchArticle.bid">
+                                    <div class="twelve wide column" style="padding-right: 0 !important;">
+                                        <a :href="'blog.html?bid='+searchArticle.bid+'&safasd='+Math.random()" target="_blank" :title="searchArticle.title">
+                                            <h3 class="ui header" v-html="searchArticle.title"></h3>
+                                        </a>
+                                        <p class="m-blogtext m-overflow-blog-search">{{searchArticle.outline}}</p>
+                                        <div class="ui mini m-infobox">
+                                            <div class="m-info" style="border-bottom: 1px solid #9999994d;">
+                                                <div class="m-calendar">
+                                                    <i class="calendar icon"></i> <span>{{dateFormat(searchArticle.writeTime, false)}}</span>
+                                                </div>
+                                                <div class="m-eye">
+                                                    <i class="thumbs up icon"></i> <span>{{searchArticle.likeNum}}</span>
+                                                </div>
+                                                <div class="m-eye">
+                                                    <i class="eye icon"></i> <span>{{searchArticle.views}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- <div class="one wide column" style="width: 10px !important;"></div> -->
+                                    <div class="four wide column" style="position: relative;">
+                                        <a :href="'blog.html?bid='+searchArticle.bid+'&safasd='+Math.random()" target="_blank" v-if="searchArticle.firstPicture!=null && searchArticle.firstPicture!=''">
+                                            <img :src="'images/fp/'+searchArticle.firstPicture" class="ui image rounded m-blog-img-size" alt="丢失">
+                                        </a>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                        <template v-if="pageInfo.list!=null">
+                            <!-- 尾部:分页部分 -->
+                            <div class="ui attached segment">
+                                <div id="go-page-top" class="ui two column center aligned grid m-padding-tiny">
+                                    <el-pagination
+                                        :background="true"
+                                        layout="prev, pager, next"
+                                        :total="pageInfo.total"
+                                        :page-size="pageInfo.pageSize"
+                                        @current-change="pager">
+                                    </el-pagination>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
                 </div>
-
+                <!-- 搜索榜单 -->
+                <div class="five wide column">
+                    <div class="ui segment">
+                        <!--  TODO 搜索榜单展示  -->
+                    </div>
+                    <div class="ui segment">
+                        <div class="ui grid m-copyright">
+                            <div class="five wide column left aligned">
+                               <a href="javascript:;" class="m-copyright-font">关于本站</a> 
+                            </div>
+                            <div class="five wide column left aligned">
+                                <a href="javascript:;" class="m-copyright-font">联系我们</a>
+                            </div>
+                            <div class="six wide column left aligned">
+                                <a href="javascript:;" class="m-copyright-font">商务合作</a>
+                            </div>
+                        </div>
+                        <div class="m-copyright-font">
+                            <h4 class="ui center aligned">服务条款的变更</h4>
+                            <p>1.我们刚刚在这里更新了我们的隐私政策，以便于更好地服务于我们的客户。我们建议您查看这些改变。</p>
+                            <p>2.写作的时候可以自动保存草稿。</p>
+                            <p>3.社区为用户持续不断的发展提供了直接的支持。</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <footer class="ui inverted vertical segment m-footer">
-            <div class="ui center aligned container">
-                <div class="ui inverted divided grid mobile reversed stackable">
-                    <div class="three wide column">
-                        <div class="ui inverted list">
-                            <div class="item">
-                                <img class="ui rounded image" src="images/del/wechat.png" alt="联系我" style="width: 80px !important; height: 80px !important;">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="three wide column">
-                        <h4 class="ui inverted header">联系我</h4>
-                        <p class="copyright">Gitee : germcell</p>
-                        <p class="copyright right aligned">WeChat : z_Cricket</p>
-                    </div>
-                    <div class="three wide column">
-                        <h4 class="ui inverted header">本站声明</h4>
-                        <p class="copyright">SpringBoot入门学习，记录开发过程中遇到的bug，问题，以及解决的方法，都会以博客的形式记录在此站</p>
-                    </div>
-                    <div class="seven wide column">
-                        <h4 class="ui inverted header">开发日志</h4>
-                        <p class="copyright">1.xxxxxxxx</p>
-                    </div>
-                </div>
-                <div class="ui inverted section divider"></div>
-                <p class="copyright">Copyright &copy; 2022</p>
-                <p class="copyright">https://gitee.com/germcell/blog.git</p>
-            </div>
-        </footer>
     </div>
 
 <!-- ---------------- js ---------------------------------------------------------------------------------- -->
-    <script src="../static/js/jquery.min.js" th:src="@{/res/js/jquery.min.js}"></script>
-    <!-- <script src="js/flexible.js"></script> -->
-    <script src="../static/js/semantic.min.js" th:src="@{/res/js/semantic.min.js}"></script>
-
-    <script type="text/javascript">
-        $(function() {
-            /*------------移动端显示导航栏------------- */
-            $("#m-show-nav").on("click", function() {
-                $(".m-item").toggle("fast",function(){
-                    $(".m-item").removeClass("m-mobile-hide");
-                });
-            })
-
-              /*------------关于我模态框------------*/
-              $("#about-me").on("click", function() {
-                $('.ui.modal').modal('show');
-            })
- 
-            /*-----------QQ------------*/
-            $(".m-qq").on("click", function() {
-                // $(".m-qq-qr").fadeIn("slow")
-                $(".m-qq-qr").toggle("slow", function() {
-                    $(".m-qq-qr").removeClass(".m-qq-qr")
-                })
-            })
-            
-            /*-----------WECHAT------------*/
-            $(".m-wechat").on("click", function() {
-                // $(".m-qq-qr").fadeIn("slow")
-                $(".m-wechat-qr").toggle("slow", function() {
-                    $(".m-wechat-qr").removeClass(".m-wechat-qr")
-                })
-            })
-            
-            /*-----------GITHUB------------*/
-            $(".m-github").on("click", function() {
-                // $(".m-qq-qr").fadeIn("slow")
-                $(".m-github-qr").toggle("slow", function() {
-                    $(".m-github-qr").removeClass(".m-github-qr")
-                })
-            })
-            
-
-        })
-    </script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/semantic.min.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/element-ui.js"></script>
+    <script src="js/my/cookie_utils.js"></script>
+    <script src="js/my/base.js"></script>
+    <script src="js/my/two.js"></script>
+    <script src="js/my/search.js"></script>
     
 </body>
 </html>

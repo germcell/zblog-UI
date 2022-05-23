@@ -301,7 +301,6 @@ const blogVue = new Vue({
           this.copyright = res.data.copyright;
           this.writer = res.data.writer;
           this.hotArticles = res.data.hotArticlesList
-          
           $("title").text(this.article.title + "-" + $("title").text());
           // 查询点赞状态
           this.userInfo = getLoginUserMsg();
@@ -899,6 +898,7 @@ const indexVue = new Vue({
     articleNum: 0,
     fans: 0,
     // alreadyFollow: []
+    keyword: ''
   },
   async created() {
     if (location.toString().includes("index.html")) {
@@ -930,7 +930,6 @@ const indexVue = new Vue({
           });
 
           // 3.判断当前登录用户和推荐作者的关系（是否关注）
-          // 集合 [1,2,3,4]
           const { data: res2 } = await axios.get(
             baseUrl + "/v2/fans/list/" + this.loginUserID,
             { headers: { token: this.token } }
@@ -1125,6 +1124,23 @@ const indexVue = new Vue({
     personalPage(loginUid) {
       location.href =
         "private_personal.html?uid=" + loginUid + "&,fsd=" + Math.random();
+    },
+    /**
+     * 搜索 (回车触发，点击触发)
+     */
+     searchEnter(event) {
+      if (event.keyCode == 13) {
+        if (this.keyword == null || this.keyword == '' || this.keyword.trim().length == 0) {
+          return
+        }
+      location.href = 'search.html?spm=' + Math.random() + '&search=' + this.keyword.trim() + '&p=1' 
+      }
+     },
+     searchClick() {
+      if (this.keyword == null || this.keyword == '' || this.keyword.trim().length == 0) {
+        return
+      }
+      location.href = 'search.html?spm=' + Math.random() + '&search=' + this.keyword.trim() + '&p=1' 
     },
   },
 });
@@ -1372,7 +1388,7 @@ const baVue = new Vue({
   },
 });
 
-/* 用户主页vue实例 */
+/* common_personal.html vue实例 */
 const pcVue = new Vue({
   el: "#personal-container",
   data: {
@@ -1425,7 +1441,6 @@ const pcVue = new Vue({
                 'content-type': 'application/json'
               }
             })
-            console.log(2);
             if (res2.code == 200) {
               this.isFans = res2.data
             } 
