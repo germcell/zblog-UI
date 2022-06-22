@@ -154,28 +154,47 @@
                                     <button id="comment" class="ui basic circular button" v-if="article.isComment==1">查看留言</button>
                                     <button id="thumbs-up" class="ui orange circular button" v-if="isThumbsUp" @click="like(1)"> <i class="icon thumbs up"></i> 已赞 {{article.likeNum}}</button>
                                     <button id="thumbs-up" class="ui orange basic circular button" v-else @click="like(2)"> <i class="icon thumbs outline up"></i> 点赞 {{article.likeNum}}</button>
-                                    <button id="appreciate" class="ui orange basic circular button" v-if="article.isAppreciate==1">赞赏</button>
+                                    <!-- <button id="appreciate" class="ui orange basic circular button" v-if="article.isAppreciate==1">赞赏</button> -->
+                                    <button class="ui orange basic circular button" v-if="article.isAppreciate==1" @click="showAppreciate()">赞赏</button>
                                 </div>
-                                <!-- 赞赏二维码 -->
-                                <div class="ui showQR flowing popup transition hidden" style="padding: 5px;">
-                                    <div class="ui orange basic label" style="padding: 3px 1px 0 1px;">
-                                        <div class="ui images rounded center aligned"  style="font-size: inherit;">
-                                            <div class="image">
-                                                <img src="images/del/wechat.png" class="ui rounded bordered image" style="width: 90px; height: 90px;">
-                                                <div style="color: #404040;text-align: center !important;">
-                                                    支付宝
-                                                </div>
+
+                                <!-- 赞赏模态框 -->
+                                <div class="ui tiny modal">
+                                    <i class="close icon"></i>
+                                    <h4 class="ui header">赞赏作者(1~999)</h4>
+                                    <div class="appreciateBox">
+                                        <div class="ab-wi">
+                                            <div>
+                                                <img class="ui rounded image" :src="'/images/avatar/'+writer.writerAvatar" width="50" height="50">
                                             </div>
-                                            <div class="image">
-                                                <img src="images/del/wechat.png" class="ui rounded bordered image" style="width: 90px; height: 90px;">
-                                                <div style="color: #404040;text-align: center !important;">
-                                                    <i class="icon wechat" style="color: #00cc22;"></i>微信
-                                                </div>
+                                            <div>
+                                                <h4>{{writer.writerName}}</h4>
+                                                <p>{{writer.writerIntroduce}}</p>
                                             </div>
                                         </div>
+                                        <div class="ab-m">
+                                            <ul class="q">
+                                                <li @click="selectAmount(2)">￥2</li>
+                                                <li @click="selectAmount(4)">￥4</li>
+                                                <li @click="selectAmount(6)">￥6</li>
+                                            </ul>
+                                            <ul class="q">
+                                                <li @click="selectAmount(10)">￥10</li>
+                                                <li @click="selectAmount(20)">￥20</li>
+                                                <li class="m-in">
+                                                    <input type="text" placeholder="1~500" v-model="selectMoney" @input="checkInput()">
+                                                </li>
+                                            </ul>
+                                        </div>    
+                                        <div class="ab-comment">
+                                            <textarea name="" placeholder="鼓励一下作者吧，你的鼓励将是我创作的最大动力~" v-model="appreciateComment"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="actions">
+                                        <button class="ui circular orange button" @click="appreciate()">赞赏 ￥{{selectMoney}}</button>
                                     </div>
                                 </div>
-            
+
                                 <!-- 留言区域-->
                                 <div class="m-show-comment" style="display: none; font-family: 'Arial','Microsoft YaHei','黑体','宋体',sans-serif;">
                                     <div class="ui teal segment">
@@ -316,29 +335,9 @@
 
         <!-- 侧边快速导航 -->
         <div id="toolbar" class="m-quicknav-flex">
-            <div class="ui icon buttons vertical">
-                <button id="showToc" class="ui purple button">目录</button>
-                <a href="#leave-messsage" class="ui purple button">留言</a>
-                <button id="showBlogQR" class="ui green button"><i class="icon wechat"></i></button>
+            <div class="ui icon buttons vertical" style="height: 80px;">
+                <a href="#leave-messsage" class="ui secondary button">留言</a>
                 <button id="go-top" class="ui button"><i class="icon up chevron"></i></button>
-            </div>
-        </div>
-        
-        <!-- 文章目录 -->
-        <div class="ui showToc flowing popup transition hidden" style="width: 200px !important;">
-            <ol class="js-toc">
-            </ol>
-        </div>
-
-        <!-- 文章二维码 -->
-        <div class="ui flowing popup transition hidden showBlogQR" style="width: 150px !important; height: 150px !important;">
-            <div class="ui violet basic label center aligned">
-                <div id="blog-qrcode" class="ui image rounded">
-                    <!-- <img src="images/wechat.png" class="ui rounded bordered image" style="width: inherit; height: inherit;"> -->
-                </div>
-                <div style="padding-top: 0.4em !important; text-align: center !important;">
-                    扫码去微信阅读
-                </div> 
             </div>
         </div>
 
@@ -388,6 +387,7 @@
     <script src="js/axios.min.js"></script>
     <script src="js/my/one.js"></script>
     <script src="js/my/two.js"></script>
+    <script src="js/my/commonReq.js"></script>
     
     <script type="text/javascript">
         /* 留言用户信息卡片 */
@@ -403,6 +403,7 @@
         });
     </script>
     <script type="text/javascript">
+
         function reply(ele) {
             $('#comment-form :input[name=content]').attr('placeholder', '@' + $(ele).data('replynickname'));
             $('#comment-form :input[name=content]').focus();
@@ -468,31 +469,7 @@
                     }
                 }
             });
-            /*------------赞赏:显示二维码------------- */
-            $('#appreciate').popup({
-                popup : $('.showQR'),
-                on    : 'click',
-                position: 'bottom center'
-            });
-            /*------------点击侧边导航栏二维码按钮，显示文章对应的二维码------------- */
-            $('#showBlogQR').popup({
-                popup : $('.showBlogQR'),
-                on    : 'click',
-                position: 'top left'
-            });
-            /*----------使用qrcode动态生成每篇文章的二维码链接----------*/
-            // blog-qrcode 表示显示二维码的容器【id】
-            var readURL = "";
-            var serverURl = "http://127.0.0.1:8080";
-            var qrcode = new QRCode("blog-qrcode", {
-                // text: "http://jindo.dev.naver.com/collie",
-                text: location.href,
-                width: 95,
-                height: 95,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
+            
             /*----------tocboc初始化--------------*/
             tocbot.init({
                 // 将生成的目录存放在以 class 为 js-toc 的容器中
@@ -505,13 +482,7 @@
                 hasInnerContainers: true,
             });
             tocbot.refresh();
-            /*------------目录:显示文章目录------------- */
-            // $('#showToc').popup({
-            //     popup : $('.showToc'),
-            //     on    : 'click',
-            //     position: 'top left'
-            // });
-           
+
             /*----------侧边快速工具栏移动检测----------*/
             var waypoint = new Waypoint({
                 element: document.getElementById('waypoint'),

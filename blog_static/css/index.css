@@ -288,7 +288,7 @@ h3:hover {
   z-index: 10 !important;
   position: fixed !important;
   bottom: 2em !important;
-  right: 1.5em !important;
+  right: 0.8em !important;
 }
 .m-padding-left-small {
    padding-left: 1em !important;
@@ -1043,4 +1043,172 @@ h3:hover {
 
 .m-copyright-font p {
   margin-bottom: 0.5em;
+}
+
+/* 文章排行榜 */
+.m-rank-menu {
+  width: 100%;
+}
+
+.m-rank-menu ul {
+  padding-left: 0;
+}
+
+.m-rank-menu ul a span:hover {
+  cursor: pointer;
+  color: #fc5531;
+}
+
+.m-rank-padding {
+  padding: 7px 0 !important;
+  color: black;
+}
+
+.m-rank-title {
+  margin-bottom: 0;
+  padding-bottom: 10px;
+  font-size: 1.1em !important;
+  border-bottom: 1px rgb(202, 195, 195) solid;
+}
+/*****************/
+
+.el-dropdown-link {
+  cursor: pointer;
+  /* color: #409EFF; */
+  /* font-weight: 700; */
+}
+
+/* 搜索用户信息展示 */
+.m-searchUser-box {
+  display: flex;
+  padding-bottom: 13px;
+  padding-top: 13px;
+  border-bottom: 1px solid rgb(210, 201, 201);
+}
+
+.m-searchUser-box .m-user-avatar {
+  flex: 1
+}
+
+.m-searchUser-box .m-u-info {
+  padding-left: 15px;
+  flex: 3;
+  align-self: center;
+}
+
+.m-searchUser-box .m-u-like {
+  align-self: center;
+}
+
+.m-searchUser-box .m-num {
+  color: #999;
+  margin-right: 20px;
+}
+
+/* 首页新版心 */
+.m-wrapper {
+  margin: 0 0;
+  width: 100%;
+  background-image: url("../images/del/del_bj.png");
+}
+
+.m-wrapper .m-wrapper-content {
+  margin: 0 auto;
+  width: 1250px;
+  padding: 5em 6em 5em 6em !important;
+}
+
+/* 赞赏模态框 */
+
+.ui.tiny.modal {
+  width: 400px;
+}
+
+.appreciateBox .ab-wi {
+  display: flex;
+  padding: 10px 21px;
+}
+
+.appreciateBox .ab-wi :nth-child(2) {
+  margin-left: 10px;
+}
+
+.appreciateBox .ab-wi h4 {
+  margin-bottom: 4px;
+  margin-top: 4px;
+}
+
+.appreciateBox .ab-wi p {
+  margin: 0 !important;
+  width: 220px;
+  font-size: 0.9em;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+} 
+
+.appreciateBox .ab-m .q {
+  display: flex;
+  padding: 0 21px;
+}
+
+.appreciateBox .ab-m .q li {
+  flex: 1;
+  padding: 8px 10px;
+  margin-right: 38px;
+  width: 80px;
+  height: 35px;
+  border: 1px solid rgba(153, 153, 153, 0.619);
+  border-radius: 5%;
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.3em;
+}
+
+.appreciateBox .ab-m .q li:hover {
+  cursor: pointer;
+  background-color: #f2711cb3;
+}
+
+.appreciateBox .ab-m .q .m-in {
+  padding: 0;
+  border: none;
+}
+
+.appreciateBox .ab-m .q .m-in input {
+  width: 80px;
+  height: 35px;
+  border: 1px solid rgba(153, 153, 153, 0.619);
+  border-radius: 5%;
+  font-weight: 500;
+  color: black;
+  padding-left: 20px;
+}
+
+.m-p-active {
+  background-color: #f2711cb3;
+}
+
+.appreciateBox .ab-comment {
+  padding: 0 21px 15px 21px;
+}
+
+.appreciateBox .ab-comment textarea {
+  resize: none;
+  width: 320px;
+  height: 70px;
+  border: 1px solid rgba(153, 153, 153, 0.619);
+  border-radius: 1%;
+  font-size: 0.9em;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: 1px;
+  color: black;
+}
+
+.appreciateBox .ab-comment textarea:focus {
+  border: 1px solid #999;
+  outline: none;
+  background-color: #f2711c0f;
 }

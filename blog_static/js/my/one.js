@@ -286,6 +286,8 @@ const blogVue = new Vue({
     userInfo: {},    // 当前登录用户信息
     isLogin: false,  // 是否登录
     likeDTO: {},     // 点赞请求体信息
+    selectMoney: '0', // 选择的打赏金额
+    appreciateComment: '', // 赞赏留言
   },
   async created() {
     if (location.toString().includes("blog.html")) {
@@ -340,6 +342,86 @@ const blogVue = new Vue({
     }
   },
   methods: {
+    // 赞赏模态框
+    showAppreciate() {
+      $('.ui.tiny.modal')
+        .modal({
+          closable: false,
+        })
+        .modal('show')
+    },
+    // 选择打赏金额
+    selectAmount(selectMoney) {
+      this.selectMoney = selectMoney
+    },
+    /*
+     * 打赏
+     *  1.用户是否登录
+     *  2.选择金额是否有效
+     *  3.留言字数是否合规
+     */
+    appreciate() {
+      if (this.userInfo.token != '' && this.userInfo.token != null) {
+        if (this.checkInput()) {
+          if (this.appreciateComment.length>200) {
+            this.$message.error('留言字数不要超过200个哦~')
+            return
+          }
+  
+          const reqParams = {
+            'paySubject': '赞赏' + this.writer.writerName,
+            'payTotalAmount': this.selectMoney,
+            'payComment': this.appreciateComment,
+            'uid': this.userInfo.loginUserID,
+            'uid2': this.writer.uid
+          }
+
+          window.open(baseUrl + 
+           '/v2/my-alipay/pay?paySubject=' + reqParams.paySubject + 
+           '&payTotalAmount=' + reqParams.payTotalAmount + 
+           '&uid=' + reqParams.uid + 
+           '&uid2=' + reqParams.uid2 + 
+           '&payComment=' + reqParams.payComment)
+
+          // 使用发送异步请求方式，无法打开支付界面
+          // const aliPayReqResult = aliPayReq(reqParams, this.userInfo.token)
+          // aliPayReqResult.then((res) => {
+            // const resultData = res.data
+            // if (resultData.code == 200) {
+            // window.open(resultData.data)
+            // } else {
+            //   this.$message.error('支付失败,请稍后重试')
+            // }
+          // })
+          return
+        }
+        return
+      } else {
+        window.open(`login.html`)
+      }
+    },
+    /* 
+     * 校验输入金额
+     *  1.是否为数字
+     *  2.是否等于0
+     *  3.位数是否大于3，大于则截取前三个字符
+     */
+    checkInput() {
+      const regex = /^[0-9]*$/
+      if (regex.test(this.selectMoney)) {
+        if (Number.parseInt(this.selectMoney) != 0) {
+          if (this.selectMoney.length > 3) {
+            this.selectMoney = this.selectMoney.substring(0,3)
+            return true
+          } else {
+            return true
+          }
+        }
+      }
+      this.selectMoney = 1
+      return false
+    },
+    // 点赞
     async like(cmd) {
       if (this.isLogin) {
         if (cmd == 1) {
@@ -395,6 +477,9 @@ const blogVue = new Vue({
         this.goLogin();
       }
     },
+    /**
+     * 登录提示框
+     */
     goLogin() {
       this.$confirm("您还未登录，是否立即登录?", "登录提示", {
         confirmButtonText: "确定",

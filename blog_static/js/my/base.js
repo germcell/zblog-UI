@@ -13,3 +13,4 @@ const avatarSize = 1024 * 1024 * 1
 // 支持的文件格式
 const suportImgFormat = '.jpg.jpeg.png.JPG.JPEG.PNG'
 // const suportImgFormat = ['jpg','jpeg','png','JPG','JPEG','PNG']
+
