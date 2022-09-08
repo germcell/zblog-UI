@@ -1212,3 +1212,123 @@ h3:hover {
   outline: none;
   background-color: #f2711c0f;
 }
+
+.m-msg-userinfo {
+  height: 410px;
+  overflow-y: auto;
+}
+.m-msg-userinfo  .m-msg-send-time {
+  padding: 0;
+  position: absolute;
+  left: 45px;
+  bottom: 5px;
+  color: #b3aeae;
+  font-size: 0.5em;
+}
+
+.m-msg-userinfo ul {
+  padding: 0 10px;
+  color: black;
+}
+
+.m-msg-userinfo li {
+  position: relative;
+  height: 60px;
+  line-height: 50px;
+  border-bottom: 1px solid #cdc5c5;
+  border-radius: 5px;
+}
+.m-msg-userinfo .m-msg-active {
+  background: #ecf2f5;
+}
+
+.m-msg-userinfo li:hover {
+  cursor: pointer;
+  background: #ecf2f5;
+}
+
+.m-msg-send-row {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.m-msg-send-row .m-msg-user-avatar {
+  flex-shrink: 0;
+  width: 40px;
+}
+
+.m-msg-send-row .m-msg-user-avatar img {
+  text-align: center;
+}
+
+.m-msg-send-row .m-msg-qipao {
+  border-radius: 0px 16px 16px 16px;
+  background-color: rgb(231, 231, 231);
+}
+
+.m-msg-send-row .m-msg-qipao .m-msg-content {
+  padding: 10px;
+}
+
+.m-msg-receieve-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.m-msg-receieve-row .m-msg-user-avatar {
+  flex-shrink: 0;
+  width: 40px;
+}
+
+.m-msg-receieve-row .m-msg-user-avatar img {
+  margin-right: 0 !important;
+}
+
+.m-msg-receieve-row .m-msg-qipao {
+  margin-right: 5px;
+  border-radius: 16px 0px 16px 16px;
+  background-color: skyblue;
+}
+
+.m-msg-receieve-row .m-msg-qipao .m-msg-content {
+  padding: 10px;
+}
+
+.m-chat-box {
+  height: 275px; 
+  overflow-y: auto;
+  border-radius: 5px 5px 0 0 !important;
+}
+
+.m-msg-send-box {
+  margin-top: 0 !important;
+  padding: 5px !important;
+  height: 135px;
+  overflow-y: auto;
+  text-decoration: overline;
+  border-radius: 0 0 5px 5px !important;
+}
+
+.m-msg-send-box .m-msg-send-area {
+  resize: none;
+  border: none;
+  outline: none;
+}
+
+.m-msg-send-box .m-msg-send-option {
+  float: right;
+}
+
+.m-msg-send-box .m-msg-send-option button {
+  margin-left: 8px;
+  height: 30px;
+  background-color: #e4e7ed;
+  border: none;
+  border-radius: 5px;
+}
+
+.m-msg-send-box .m-msg-send-option button:hover {
+  cursor: pointer;
+  background-color: #ff00005e;
+}

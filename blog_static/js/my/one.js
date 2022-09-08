@@ -3,8 +3,8 @@ const loginVue = new Vue({
   el: "#login-container",
   data: {
     loginData: {
-      mail: "",
-      pwd: "",
+      mail: "441497343@qq.com",
+      pwd: "1234",
     },
     msg: "登录",
     backUrl: "",
@@ -1606,5 +1606,12 @@ const pcVue = new Vue({
         }
       }
     },
+    goMessage() {
+      if (!this.userInfo.isLogin) {
+        this.$message.error("请先登录")
+        return
+      }
+      location.href = "message.html"
+    }
   },
 });

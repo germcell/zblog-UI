@@ -99,7 +99,7 @@
                 </ui>
               </div>
               <div>
-                <button class="ui green button">私信TA</button>
+                <button class="ui green button" @click="goMessage()">私信TA</button>
                 <button class="ui button" v-if="isFans" @click="follow(2)">取消关注</button>
                 <button class="ui blue button" v-else @click="follow(1)">+关注</button>
               </div>

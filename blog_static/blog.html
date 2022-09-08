@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <div id="blog-container">
+    <div id="blog-container" style="display: none;" :style="{display: 'block'}">
         <div class="nav-flexed">
             <nav class="ui attached segment m-navpd">
                 <div class="ui container">
@@ -36,8 +36,8 @@
                             </form>
                         </div>
                         <div class="m-login-commd">
-                           <ul v-if="isLogin">
-                               <li style="margin-right: 7px;">
+                        <ul v-if="isLogin">
+                            <li style="margin-right: 7px;">
                                 <el-dropdown>
                                     <a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" title="个人中心">
                                         <el-avatar :size="35" :src="'images/avatar/'+userInfo.avatar"></el-avatar>
@@ -54,19 +54,19 @@
                                             </div> 
                                             <div class="m-login-userInfo"> 
                                                 <el-dropdown-item disabled>
-                                                   <ul class="m-af">
-                                                       <li>文章: {{userInfo.articleNum}}</li>
-                                                       <li>粉丝: {{userInfo.fans}}</li>
-                                                   </ul> 
+                                                <ul class="m-af">
+                                                    <li>文章: {{userInfo.articleNum}}</li>
+                                                    <li>粉丝: {{userInfo.fans}}</li>
+                                                </ul> 
                                                 </el-dropdown-item>
                                             </div>  
                                     </el-dropdown-menu>
-                                  </el-dropdown>
-                               </li>
-                               <li style="width: 4em;"><a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" style="color: black;">个人中心</a></li>
-                               <li @click="logout">/ 退出</li>
-                               <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
-                           </ul> 
+                                </el-dropdown>
+                            </li>
+                            <li style="width: 4em;"><a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" style="color: black;">个人中心</a></li>
+                            <li @click="logout">/ 退出</li>
+                            <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                        </ul> 
                             <ul class="m-no-login" v-else>
                                 <li><a href="login.html" class="m-login" title="登录">登录</a></li>
                                 <li><a href="register.html" class="m-register" title="去注册">/  注册</a></li>
