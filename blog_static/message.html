@@ -100,7 +100,7 @@
                                             <img class="ui mini avatar image" :src="'images/avatar/' + u.avatar">
                                         </span>
                                         <span style="font-size: 1em;">{{u.name}}</span>
-                                        <span class="m-msg-unread">{{u.unread}}条未读</span>
+                                        <span class="m-msg-unread" v-if="u.unread>0">{{u.unread}}条未读</span>
                                         <P class="m-msg-send-time">{{ dateFormat(u.createTime,true)}}</P>
                                     </div>
                                 </li>
@@ -139,11 +139,24 @@
                     </div>
                 </div>
                 <!-- 聊天窗口 -->
-                <!-- <template v-if="currentUserInfo.sendId != ">
-                </template> -->
                 <template v-if="currentUserInfo.sendId != null">
                     <div class="eleven wide column">
                         <div class="ui segment m-chat-box" style="margin-bottom: 0px;">
+
+                        <!-- TODO 消息按时间排列 -->
+                        <template v-for="r in currentReceiveMsg" :key="r.id">
+                            <div class="m-msg-send-row">
+                                <div class="m-msg-user-avatar">
+                                    <img class="ui mini avatar image" :src="'images/avatar/'+currentUserInfo.avatar">
+                                </div>
+                                <div class="m-msg-qipao">
+                                    <div class="m-msg-content">
+                                        <span>{{r.content}}</span> 
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                            
                             <!-- 发件人 -->    
                             <div class="m-msg-send-row">
                                 <div class="m-msg-user-avatar">
@@ -154,9 +167,9 @@
                                         <span>哈哈哈哈哈哈哈哈哈哈</span> 
                                     </div>
                                 </div>
-                                </div>
-                                <!-- 收件人 -->
-                                <div class="m-msg-receieve-row">
+                            </div>
+                            <!-- 收件人 -->
+                            <div class="m-msg-receieve-row">
                                 <div class="m-msg-qipao">
                                     <div class="m-msg-content">
                                         <span>哈哈哈哈哈哈哈哈哈哈</span> 
@@ -165,7 +178,7 @@
                                 <div class="m-msg-user-avatar">
                                     <img class="ui mini avatar image" src="./images/avatar/common_avatar.png">
                                 </div>
-                                </div>
+                            </div>
                          </div>
                          <!-- 发送消息框 -->
                          <div class="ui segment m-msg-send-box">
