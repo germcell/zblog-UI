@@ -100,7 +100,7 @@
                 </ui>
               </div>
               <div>
-                <button class="ui green button" title="私信"><i class="mail icon"></i> 23</button>
+                <button class="ui green button" title="私信" @click="goMsgPage()"><i class="mail icon"></i> {{unreadPrivateMsg}}</button>
                 <a href="#userinfobox" class="ui button" title="编辑个人资料" @click="showInfo"><i class="icon settings"></i> 编辑资料</a>
               </div>
             </div>

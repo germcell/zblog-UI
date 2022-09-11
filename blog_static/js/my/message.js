@@ -1,20 +1,74 @@
 const messageVue = new Vue({
   el: "#message-container",
   data: {
-    sendContent: "sdfs",
-    userInfo: {}
+    sendContent: "",
+    userInfo: {},
+    privateMsgUserInfo: [],
+    unreadMsgNum: [],
+    currentUserInfo: {},
+    currentPrivateMsgInfo: [],
   },
-  created() {
+  async created() {
     this.userInfo = getLoginUserMsg()
     if (!this.userInfo.isLogin) {
       this.$message.error("请先登录")
       location.href = "index.html"
     }
     
+    if (getUrlParam('u') != this.userInfo.loginUserID) {
+      location.href = '404.html'
+    }
 
+    // 获取私信用户
+    const {data: res} = await axios.get(baseUrl + '/v2/msg/user/' + this.userInfo.loginUserID)
+    if (res.code != 200) {
+      this.$message.error("私信用户请求失败")
+      return
+    }
+    this.privateMsgUserInfo = res.data
 
+    // 获取未读私信数量
+    const {data: res2} = await axios.get(baseUrl + '/v2/msg/unread/' + this.userInfo.loginUserID)
+    if (res2.code != 200) {
+      this.$message.error("私信请求失败")
+      return
+    }
+    this.unreadMsgNum = res2.data
+
+    // 合并数据
+    this.unreadMsgNum.some(ele => {
+      this.privateMsgUserInfo.some(ele2 => {
+        if (ele.sendId == ele2.sendId) {
+          ele2.unread = ele.unread
+          return true
+        }
+      })
+    })
   },
   methods: {
+    // 选择当前用户
+    async selectUser(sendId) {
+      this.currentUserInfo = this.privateMsgUserInfo.find(ele => {
+        return ele.sendId == sendId
+      })
+
+    // 请求私信内容
+    const {data: res} = await axios({
+      url: baseUrl + '/v2/msg/private',
+      method: 'post',
+      data: JSON.stringify(this.currentUserInfo.commentIds),
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    if (res.code != 200) {
+      this.$message.error('获取私信失败')
+      return 
+    }
+    this.currentPrivateMsgInfo = res.data
+
+    },
     logout() {
       clearCookie();
       this.$notify({

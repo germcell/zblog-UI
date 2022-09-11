@@ -552,6 +552,7 @@ const ppVue = new Vue({
     uploadAvatarSuccess: false,
     uploadAvatarSrc: "",
     uploadFiles: [],
+    unreadPrivateMsg: 0
   },
   async created() {
     if (location.toString().includes("private_personal.html")) {
@@ -618,6 +619,17 @@ const ppVue = new Vue({
         }
         // 需将用户原始信息和修改信息做一个隔离，需要做一个备份（深拷贝）
         $.extend(true, this.profile.newWriter, this.profile.writer);
+
+        // 请求并计算未读私信数量
+        const {data: res5} = await axios.get(baseUrl + '/v2/msg/unread/' + this.userInfo.loginUserID)
+        if (res5.code != 200) {
+          this.$message.error("私信数量请求失败")
+          return
+        }
+        res5.data.some(ele => {
+          this.unreadPrivateMsg += ele.unread
+        })
+        
         return;
       }
     }
@@ -959,6 +971,10 @@ const ppVue = new Vue({
       localStorage.setItem("currentEditArticleId", bid);
       location.href = "blog_add.html";
     },
+    goMsgPage() {
+      window.open('message.html?u=' + this.userInfo.loginUserID + '&t=' + Math.random())
+      // location.href = 'message.html?u=' + this.userInfo.loginUserID + "&t=" + Math.random()
+    }
   },
 });
 

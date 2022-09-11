@@ -1332,3 +1332,11 @@ h3:hover {
   cursor: pointer;
   background-color: #ff00005e;
 }
+
+.m-msg-userinfo .m-msg-unread {
+  position: absolute;
+  top: 0;
+  right: 3px;
+  font-size: 0.8em;
+  color: #0000ffc2;
+}
