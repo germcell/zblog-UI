@@ -630,7 +630,7 @@ const ppVue = new Vue({
           this.unreadPrivateMsg += ele.unread
         })
         
-        return;
+        return
       }
     }
   },
@@ -999,7 +999,8 @@ const indexVue = new Vue({
     articleNum: 0,
     fans: 0,
     // alreadyFollow: []
-    keyword: ''
+    keyword: '',
+    unreadNum: 0, // 未读私信数量
   },
   async created() {
     if (location.toString().includes("index.html")) {
@@ -1044,6 +1045,25 @@ const indexVue = new Vue({
                 }
               });
             });
+          }
+
+          // 3.1请求并计算未读私信数量
+          const {data: res5} = await axios.get(baseUrl + '/v2/msg/unread/' + this.loginUserID)
+          if (res5.code != 200) {
+            this.$message.error("私信数量请求失败")
+            return
+          }
+          res5.data.some(ele => {
+            this.unreadNum += ele.unread
+          })
+          if (this.unreadNum > 0) {
+            this.$notify({
+              title: "私信",
+              message: "您有" + this.unreadNum + "条私信,请前往个人中心查看",
+              type: "info",
+              offset: 50,
+              duration: 3000,
+            })
           }
         }
         // 4.排行榜记录分页
@@ -1622,12 +1642,23 @@ const pcVue = new Vue({
         }
       }
     },
-    goMessage() {
+    goMsgPage() {
       if (!this.userInfo.isLogin) {
         this.$message.error("请先登录")
         return
       }
-      location.href = "message.html"
+
+      let viewUser = {
+        'sendId': this.currentUserInfo.uid,
+        'name': this.currentUserInfo.writerName,
+        'avatar': this.currentUserInfo.writerAvatar,
+        'sex': this.currentUserInfo.writerSex,
+        'msgTag': 0,
+        'commentIds': [],
+        'createTime': new Date()
+      }
+      sessionStorage.setItem('viewUser', JSON.stringify(viewUser))
+      window.open('message.html?u=' + this.userInfo.loginUserID + '&t=' + Math.random())
     }
   },
 });

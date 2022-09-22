@@ -34,3 +34,4 @@ function formatData(data) {
   return t.toFixed(1) + 'k'
 }
 
+

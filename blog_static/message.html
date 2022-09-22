@@ -89,7 +89,7 @@
             </div>
             <div class="ui segment grid" style="border: none;">
                 <!-- 用户列表 -->
-                <div class="five wide column">
+                <div class="five wide column" style="padding-right: 0;">
                     <div class="ui segment" style="padding: 0px;">
                         <div class="m-msg-userinfo">
                             <ul>
@@ -101,7 +101,15 @@
                                         </span>
                                         <span style="font-size: 1em;">{{u.name}}</span>
                                         <span class="m-msg-unread" v-if="u.unread>0">{{u.unread}}条未读</span>
-                                        <P class="m-msg-send-time">{{ dateFormat(u.createTime,true)}}</P>
+                                        <P class="m-msg-send-time">{{ dateFormat(u.createTime,true)}} 
+                                            <span style="padding-left: 8px;" @click.stop>
+                                                <template>
+                                                    <el-popconfirm title="确定永久删除此对话?" @confirm="delAllMsg(u.sendId)">
+                                                      <el-button type="info" icon="el-icon-delete" slot="reference" size="mini" plain="true" circle></el-button>
+                                                    </el-popconfirm>
+                                                </template>
+                                            </span>
+                                        </P>
                                     </div>
                                 </li>
                             </template>
@@ -142,23 +150,39 @@
                 <template v-if="currentUserInfo.sendId != null">
                     <div class="eleven wide column">
                         <div class="ui segment m-chat-box" style="margin-bottom: 0px;">
-
-                        <!-- TODO 消息按时间排列 -->
-                        <template v-for="r in currentReceiveMsg" :key="r.id">
-                            <div class="m-msg-send-row">
-                                <div class="m-msg-user-avatar">
-                                    <img class="ui mini avatar image" :src="'images/avatar/'+currentUserInfo.avatar">
-                                </div>
-                                <div class="m-msg-qipao">
-                                    <div class="m-msg-content">
-                                        <span>{{r.content}}</span> 
+                        <template v-for="r in sortMsg" :key="r.id">
+                            <!-- 发消息展示【我】 -->
+                            <template v-if="r.sendId==userInfo.loginUserID">
+                                <div class="m-msg-receieve-row">
+                                    <div class="m-msg-qipao">
+                                        <div class="m-msg-content">
+                                            <span>{{r.content}}</span> 
+                                        </div>
+                                    </div>
+                                    <div class="m-msg-user-avatar">
+                                        <img class="ui mini avatar image" :src="'/images/avatar/' + userInfo.avatar">
                                     </div>
                                 </div>
-                            </div>
+                            </template>
+                            <!-- 收消息展示【他】 -->
+                            <template v-else>
+                                <div class="m-msg-send-row">
+                                    <div class="m-msg-user-avatar">
+                                        <img class="ui mini avatar image" :src="'images/avatar/'+currentUserInfo.avatar">
+                                    </div>
+                                    <div class="m-msg-qipao">
+                                        <div class="m-msg-content">
+                                            <span>{{r.content}}</span> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
                         </template>
-                            
+                        
+                        <!-- TODO 私信气泡大小与内容自适应 -->
+
                             <!-- 发件人 -->    
-                            <div class="m-msg-send-row">
+                            <!-- <div class="m-msg-send-row">
                                 <div class="m-msg-user-avatar">
                                     <img class="ui mini avatar image" src="./images/avatar/1231243dfs.jpg">
                                 </div>
@@ -167,9 +191,9 @@
                                         <span>哈哈哈哈哈哈哈哈哈哈</span> 
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- 收件人 -->
-                            <div class="m-msg-receieve-row">
+                            <!-- <div class="m-msg-receieve-row">
                                 <div class="m-msg-qipao">
                                     <div class="m-msg-content">
                                         <span>哈哈哈哈哈哈哈哈哈哈</span> 
@@ -178,18 +202,22 @@
                                 <div class="m-msg-user-avatar">
                                     <img class="ui mini avatar image" src="./images/avatar/common_avatar.png">
                                 </div>
-                            </div>
+                            </div> -->
                          </div>
                          <!-- 发送消息框 -->
                          <div class="ui segment m-msg-send-box">
                              <textarea class="m-msg-send-area" name="" id="" cols="63" rows="5" v-model="sendContent"></textarea>
                              <div class="m-msg-send-option">
-                                 <button>发送图片</button>
-                                 <button>清空</button>
-                                 <button><i class="ui icon location arrow"></i>发送 </button>
+                                <span v-if="maxError" style="color: #ff0000b8;">最多可输入200个字符</span>
+                                <button>发送图片</button>
+                                <button>清空</button>
+                                <button @click="sendMsg()"><i class="ui icon location arrow"></i>发送 </button>
                              </div>
                          </div>
                      </div>
+                </template>
+                <template v-else>
+                    <div class="ui header" style="color: #999;">暂无消息</div>
                 </template>
             </div>
         </div>

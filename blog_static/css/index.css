@@ -1226,6 +1226,11 @@ h3:hover {
   font-size: 0.5em;
 }
 
+.m-msg-userinfo .m-msg-delAll {
+  padding-left: 1em;
+  color: #b49b9b;
+}
+
 .m-msg-userinfo ul {
   padding: 0 10px;
   color: black;
@@ -1233,8 +1238,8 @@ h3:hover {
 
 .m-msg-userinfo li {
   position: relative;
-  height: 60px;
-  line-height: 50px;
+  height: 75px;
+  line-height: 55px;
   border-bottom: 1px solid #cdc5c5;
   border-radius: 5px;
 }
@@ -1267,7 +1272,7 @@ h3:hover {
 }
 
 .m-msg-send-row .m-msg-qipao .m-msg-content {
-  padding: 10px;
+  padding: 7px;
 }
 
 .m-msg-receieve-row {
@@ -1292,7 +1297,7 @@ h3:hover {
 }
 
 .m-msg-receieve-row .m-msg-qipao .m-msg-content {
-  padding: 10px;
+  padding: 7px;
 }
 
 .m-chat-box {
@@ -1336,7 +1341,8 @@ h3:hover {
 .m-msg-userinfo .m-msg-unread {
   position: absolute;
   top: 0;
-  right: 3px;
+  right: 7px;
   font-size: 0.8em;
-  color: #0000ffc2;
+  font-weight: 600;
+  color: #ff3535cc;
 }
