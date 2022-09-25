@@ -104,7 +104,7 @@
                                         <P class="m-msg-send-time">{{ dateFormat(u.createTime,true)}} 
                                             <span style="padding-left: 8px;" @click.stop>
                                                 <template>
-                                                    <el-popconfirm title="确定永久删除此对话?" @confirm="delAllMsg(u.sendId)">
+                                                    <el-popconfirm title="确定永久删除此对话?" @confirm="delAllMsg(u.sendId,u.receiveId)">
                                                       <el-button type="info" icon="el-icon-delete" slot="reference" size="mini" plain="true" circle></el-button>
                                                     </el-popconfirm>
                                                 </template>

@@ -1394,7 +1394,7 @@ const baVue = new Vue({
         }
         formData.append("file", uploadFiles[0]);
       }
-      // 2.验证提价数据
+      // 2.验证提交数据
       if (this.addBlog.title.trim().length == 0) {
         this.$message.error("请输入文章标题");
         return;

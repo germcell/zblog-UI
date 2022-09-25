@@ -242,12 +242,24 @@ const messageVue = new Vue({
         })
       }
     },
-    /**
-     * 删除当前所有对话
+    /**   
+     * 删除当前选中用户的所有对话
      */
-    delAllMsg(sendId) {
-      // TODO 删除 sendId + loginUserId 的私信
-      console.log(sendId);
+    delAllMsg(sendId,receiveId) {
+      axios({
+        url: baseUrl + '/v2/msg/del/' + sendId + '/' + receiveId, 
+        method: 'delete'
+      }).then((res)=>{
+        if (res.data.code == 200) {
+          this.privateMsgUserInfo = this.privateMsgUserInfo.filter(ele=>{
+            return ele.sendId != sendId || ele.receiveId != receiveId
+          })
+        } else {
+          this.$message.error('删除失败')
+        }
+      }).catch((error)=>{
+        this.$message.error('删除失败')
+      }) 
     },
     /**
      * 退出
