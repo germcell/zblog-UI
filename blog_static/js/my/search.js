@@ -228,7 +228,9 @@ const vm = new Vue({
      * @param {*} uid 
      */
     cancelFans(uid) {
+      
       // TODO 取消关注请求编写
+
     },
     /**
      * 登录提示框

@@ -1267,7 +1267,7 @@ h3:hover {
 }
 
 .m-msg-send-row .m-msg-qipao {
-  border-radius: 0px 16px 16px 16px;
+  border-radius: 0px 5px 5px 5px;
   background-color: rgb(231, 231, 231);
 }
 
@@ -1292,7 +1292,7 @@ h3:hover {
 
 .m-msg-receieve-row .m-msg-qipao {
   margin-right: 5px;
-  border-radius: 16px 0px 16px 16px;
+  border-radius: 5px 0px 5px 5px;
   background-color: skyblue;
 }
 
@@ -1345,4 +1345,21 @@ h3:hover {
   font-size: 0.8em;
   font-weight: 600;
   color: #ff3535cc;
+}
+
+.m-show-comment .comment-content-capacity input {
+  padding-right: 0 !important;
+  width: 42px !important;
+  border: none !important;
+}
+
+.m-show-comment .m-comments-over {
+  text-align: center;
+  color: #999;
+  font-size: 0.5em;
+}
+
+.m-show-comment .m-comments-show {
+  padding: 5px 0 2px 0;
+  font-weight: 500;
 }

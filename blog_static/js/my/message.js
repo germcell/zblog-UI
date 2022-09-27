@@ -172,7 +172,7 @@ const messageVue = new Vue({
       this.ws = webSocket
       this.ws.onerror = ()=>{ this.$message.error('网络异常，建立连接失败') }
       this.ws.onopen = ()=>{
-        this.$message.success('建立连接成功')
+        this.$message.success('连接成功')
       }
        // 实时监听回显/推送消息
        this.ws.onmessage = (evt) => {
@@ -258,7 +258,7 @@ const messageVue = new Vue({
           this.$message.error('删除失败')
         }
       }).catch((error)=>{
-        this.$message.error('删除失败')
+        this.$message.error('删除失败',error)
       }) 
     },
     /**
@@ -278,11 +278,17 @@ const messageVue = new Vue({
         clearInterval(timer);
       }, 1000);
     },
+    sendImg() {
+      this.$message.info('todo...')
+    },
+    clearInput() {
+      this.sendContent = ''
+    },
   },
   /**
    * 离开时关闭ws连接
    */
   beforeDestory() {
     this.ws.close()
-  }
+  },
 });

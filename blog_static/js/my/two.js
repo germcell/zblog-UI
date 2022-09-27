@@ -21,7 +21,11 @@ function getLoginUserMsg() {
   return userInfo
 }
 
-/* 数据格式化显示 */
+/**
+ * 点赞数、粉丝数类数据格式化显示，如2000 =>2k
+ * @param {*} data 
+ * @returns 
+ */
 function formatData(data) {
   const dataInt = Number.parseInt(data)
   const t = dataInt / 1000
@@ -33,5 +37,7 @@ function formatData(data) {
   }
   return t.toFixed(1) + 'k'
 }
+
+
 
 

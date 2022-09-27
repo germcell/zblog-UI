@@ -288,6 +288,19 @@ const blogVue = new Vue({
     likeDTO: {},     // 点赞请求体信息
     selectMoney: '0', // 选择的打赏金额
     appreciateComment: '', // 赞赏留言
+    showComments: false, // 是否显示文章评论
+    commentPageInfo: null, // 评论分页信息 
+    commentTrees: [], // 每层楼及其子评论构成的评论树
+    splitTrees: [],  // 将每层楼的评论树拆分为一层，此数组存在拆分后的每个评论节点
+    commentObj: {
+      content: '', // 评论内容
+      replyId: -1, // 被回复用户id，当直接发表评论时为-1，当回复某用户评论时为该评论id
+      replyName: '输入评论...', //当前回复用户
+      replyUserId: -1, //当前回复用户id，默认为该文章作者id【待该文章数据加载后赋值】
+      maxLength: '200 /', // 最大评论字符数
+      currentLength: 0, //当前评论字符数
+    },
+    isCommentsLoadOver: false // 是否已经加载全部评论    
   },
   async created() {
     if (location.toString().includes("blog.html")) {
@@ -299,10 +312,12 @@ const blogVue = new Vue({
         );
         if (res.code == 200) {
           this.article = res.data.blog;
+          this.commentObj.replyUserId = this.article.uid
           this.category = res.data.category;
           this.copyright = res.data.copyright;
           this.writer = res.data.writer;
           this.hotArticles = res.data.hotArticlesList
+          // 网页标签页显示文章标题
           $("title").text(this.article.title + "-" + $("title").text());
           // 查询点赞状态
           this.userInfo = getLoginUserMsg();
@@ -518,6 +533,181 @@ const blogVue = new Vue({
       } else {
         location.href = 'common_personal.html?uid=' + uid + '&dfsadf=' + Math.random()
       }
+    },
+    /**
+     * 是否显示评论
+     * @returns 
+     */
+    showCommentsBtn(bid) {
+      if (this.showComments) {
+        this.showComments = false
+        return
+      }
+      this.showComments = true
+      if (this.commentPageInfo == null) {
+        this.getComments(bid) 
+      } else {
+        return
+      }
+    },
+    /**
+     * 获取文章评论
+     * @param {} bid 
+     */
+    getComments(bid) {
+      // 不等于null说明不是第一次查询，页码+1
+      if (this.commentPageInfo != null) {
+        // 已经是最后一页
+        if (!this.commentPageInfo.hasNextPage) {
+          this.isCommentsLoadOver = true
+          return
+        }
+        // 查询下一页
+        axios.get(baseUrl + '/v2/msg/comments/' + bid, {params: {'p': this.commentPageInfo.nextPage}})
+        .then(res=>{
+        
+          console.log('第2页');
+          console.log(this.splitTrees);
+
+           // 获取分页信息和评论树
+           this.commentPageInfo = res.data.data.commentPageInfo
+           this.commentTrees = res.data.data.commentTrees
+           
+           // 通过遍历树的后续遍历，拆分评论树
+           this.commentTrees.some(ele => {
+             this.splitTrees.push(this.splitCommentTree1(ele))
+           })
+
+          // 因为评论树拆分后会从将父评论节点移至最后一位，所以当有子评论时，需将拆分后的数组反转，以便页面渲染
+          this.splitTrees.some(ele => {
+            if (ele.length > 1) {
+              els = ele.reverse()
+            }
+          }) 
+
+          // 将评论发表日期进行格式化
+          this.splitTrees.some(ele=>{
+            ele = commentDateFormat(ele)
+          })
+
+          console.log('第3页');
+          console.log(this.splitTrees);
+
+        }).catch(error=>{
+          this.$message.error('获取留言失败',error)
+        })
+      } else {
+        axios.get(baseUrl + '/v2/msg/comments/' + bid, {params: {'p': 1}})
+        .then(res=>{
+          // 获取分页信息和评论树
+          this.commentPageInfo = res.data.data.commentPageInfo
+          this.commentTrees = res.data.data.commentTrees
+          
+          // 通过遍历树的后续遍历，拆分评论树
+          this.commentTrees.some(ele => {
+            this.splitTrees.push(this.splitCommentTree1(ele))
+          })
+
+          // 因为评论树拆分后会从将父评论节点移至最后一位，所以当有子评论时，需将拆分后的数组反转，以便页面渲染
+          this.splitTrees.some(ele => {
+            if (ele.length > 1) {
+              els = ele.reverse()
+            }
+          })
+
+          // 将评论发表日期进行格式化
+          this.splitTrees.some(ele=>{
+            ele = commentDateFormat(ele)
+          })
+
+        }).catch(error=>{
+          this.$message.error('获取留言失败',error)
+        })
+      }
+    },
+    /**
+     * 后序遍历评论树，并返回
+     * @param {*} root 
+     * @returns 
+     */
+    splitCommentTree1(root) {
+      var nodes = []
+      this.splitCommentTree2(root, nodes)
+      return nodes
+    },
+    /**
+     * 递归调用
+     * @param {*} root 当前节点
+     * @param {*} nodes 存放节点的数组
+     * @returns 
+     */
+    splitCommentTree2(root, nodes) {
+      if (root.childComments == null) {
+        nodes.push(root)
+        return nodes
+      }
+      // 先遍历左
+      root.childComments.some(ele => {
+        this.splitCommentTree2(ele, nodes)
+      })
+      nodes.push(root)
+    },
+    /**
+     * 写评论
+     */
+    writeComment() {
+      if (this.isLogin) {
+        const l = this.commentObj.content.trim().length
+        if (l > 200 || l == 0) {
+          this.commentObj.currentLength = this.commentObj.content.length
+          return
+        }
+        this.commentObj.currentLength = this.commentObj.content.length
+
+        axios.post(baseUrl + '/v2/msg/comments',
+         {
+          'sendId': this.userInfo.loginUserID,
+          'receiveId': this.commentObj.replyUserId,
+          'content': this.commentObj.content,
+          'msgTag': 1,
+          'bid': this.article.bid,
+          'pid': this.commentObj.replyId 
+        },
+        { headers: 
+          { 'token': this.userInfo.token,
+            'content-type': 'application/json'
+          }
+        }).then(res=>{
+          if (res.data.code == 200) {
+            this.$message.success('评论成功')
+            // 评论成功后从新加载评论
+            this.commentPageInfo = null
+            this.commentTrees = []
+            this.splitTrees = []
+            this.isCommentsLoadOver = false
+            this.commentObj.content = ''
+            this.getComments(this.article.bid)
+          } else if (res.data.code == 501) {
+            this.$message.error('评论失败,登录信息过期')
+          } else {
+            this.$message.error('评论失败,系统异常')
+          }
+        }).catch(error=>{
+          this.$message.error('评论失败',error)
+        })
+      } else {
+        this.goLogin()
+      }
+
+      // TODO 删除评论
+
+    },
+    reply(replyCommentId,replyName,replyUserId) {
+      this.commentObj.replyId = replyCommentId
+      this.commentObj.replyName = '回复' + replyName
+      this.commentObj.replyUserId = replyUserId
+
+      console.log(this.commentObj.replyId)
     }
   },
   watch: {
