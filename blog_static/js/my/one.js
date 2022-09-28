@@ -698,8 +698,9 @@ const blogVue = new Vue({
       } else {
         this.goLogin()
       }
-
+      
       // TODO 删除评论
+      // TODO 添加评论加载动画
 
     },
     reply(replyCommentId,replyName,replyUserId) {

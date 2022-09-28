@@ -2,7 +2,8 @@
 .m-login-content {
   width: 100%;
   height: 100%;
-  background: url(../images/del/login_bj9.png) no-repeat center;
+  /* background: url(../images/del/login_bj9.png) no-repeat center; */
+  background-color: #f1f1f1;
   background-size: cover;
 }
 
@@ -11,8 +12,15 @@
   width: 100%;
   height: 100%;
   background-repeat: no-repeat;
-  background: url(../images/del/login_bj7.png) no-repeat center;
+  /* background: url(../images/del/login_bj7.png) no-repeat center; */
+  background-color: #f1f1f1;
   background-size: cover;
+}
+
+#m-logo-z {
+  position: absolute;
+  left: 17em;
+  top: 7em;
 }
 
 .m-login {
@@ -30,7 +38,8 @@
   /* height: 80%; */
   /* height: 240px; */
   background-color: #fff;
-  border-radius: 3px
+  border-radius: 3px;
+  box-shadow: 0px 0px 20px 10px #0000003b;
 }
 
 .m-login .tips {
