@@ -565,9 +565,6 @@ const blogVue = new Vue({
         // 查询下一页
         axios.get(baseUrl + '/v2/msg/comments/' + bid, {params: {'p': this.commentPageInfo.nextPage}})
         .then(res=>{
-        
-          console.log('第2页');
-          console.log(this.splitTrees);
 
            // 获取分页信息和评论树
            this.commentPageInfo = res.data.data.commentPageInfo
@@ -589,9 +586,6 @@ const blogVue = new Vue({
           this.splitTrees.some(ele=>{
             ele = commentDateFormat(ele)
           })
-
-          console.log('第3页');
-          console.log(this.splitTrees);
 
         }).catch(error=>{
           this.$message.error('获取留言失败',error)
@@ -700,15 +694,30 @@ const blogVue = new Vue({
       }
       
       // TODO 删除评论
-      // TODO 添加评论加载动画
 
     },
+    /**
+     * 回复评论
+     * @param {*} replyCommentId 被回复评论id
+     * @param {*} replyName 被回复人昵称
+     * @param {*} replyUserId 被回复人uid
+     */
     reply(replyCommentId,replyName,replyUserId) {
+      // 输入框获取得焦点
+      this.$nextTick(()=>{
+        this.$refs.inputVal.focus()
+      })
+
       this.commentObj.replyId = replyCommentId
       this.commentObj.replyName = '回复' + replyName
       this.commentObj.replyUserId = replyUserId
-
-      console.log(this.commentObj.replyId)
+    },
+    /**
+     * TODO
+     * 删除评论
+     */
+    delComment() {
+      this.$message.info('TODO')
     }
   },
   watch: {

@@ -101,8 +101,6 @@ function commentDateFormat(timeArr) {
       return
     }
 
-    console.log(year,month,day,hours,minutes);
-
     if (year != currentYear) {
       ele.createTime = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
     } else if (month == currentMonth && day == currentDay) {

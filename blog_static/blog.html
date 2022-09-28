@@ -197,130 +197,130 @@
                                     </div>
                                 </div>
 
-                                <!-- 评论区域-->
-                                <div class="m-show-comment" style="font-family: 'Arial','Microsoft YaHei','黑体','宋体',sans-serif;">
-                                    <template v-if="showComments">
-                                        <div class="ui teal segment">
-                                            <div class="ui threaded comments">
-                                                <h3 class="ui dividing header">Comments</h3>
-                                                <!-- 只有父评论，无子评论 -->
-                                                <template v-if="splitTrees.length != 0">
-                                                    <template v-for="(tree,index) in splitTrees" :key="index">
-                                                        <template v-if="tree.length == 1">
-                                                            <div class="comment" v-for="comment in tree" :key="comment.id">
-                                                                <a class="avatar">
-                                                                <img :src="'images/avatar/'+comment.sendAvatar">
+                            <!-- 评论区域-->
+                            <div class="m-show-comment" style="font-family: 'Arial','Microsoft YaHei','黑体','宋体',sans-serif;">
+                                <template v-if="showComments">
+                                    <div class="ui teal segment">
+                                        <div class="ui threaded comments">
+                                            <h3 class="ui dividing header">Comments</h3>
+                                            <!-- 只有父评论，无子评论 -->
+                                            <template v-if="splitTrees.length != 0">
+                                                <template v-for="(tree,index) in splitTrees" :key="index">
+                                                    <template v-if="tree.length == 1">
+                                                        <div class="comment" v-for="comment in tree" :key="comment.id">
+                                                            <a class="avatar">
+                                                            <img :src="'images/avatar/'+comment.sendAvatar">
+                                                            </a>
+                                                            <div class="content" style="margin-bottom: 5px;">
+                                                            <a class="author">{{comment.sendName}}</a>
+                                                            <div class="metadata">
+                                                                <span class="date">{{comment.createTime}}</span>
+                                                            </div>
+                                                            <div class="text m-comments-show">
+                                                                {{comment.content}}
+                                                            </div>
+                                                            <div class="actions">
+                                                                <a class="reply" @click="reply(comment.id,comment.sendName,comment.sendId)">
+                                                                    <i class="ui icon comment"></i> 回复TA</a>
+                                                                <a class="reply" v-if="comment.sendId == userInfo.loginUserID" @click="delComment()">
+                                                                    <i class="ui icon trash"></i> 删除</a>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                    <!-- 父评论有子评论，先展示父评论，再从索引1处遍历展示所有子评论 -->
+                                                    <template v-else>
+                                                        <div class="comment">
+                                                            <a class="avatar">
+                                                                <img :src="'images/avatar/'+tree[0].sendAvatar">
                                                                 </a>
                                                                 <div class="content" style="margin-bottom: 5px;">
-                                                                <a class="author">{{comment.sendName}}</a>
+                                                                <a class="author">{{tree[0].sendName}}</a>
                                                                 <div class="metadata">
-                                                                    <span class="date">{{comment.createTime}}</span>
+                                                                    <span class="date">{{tree[0].createTime}}</span>
                                                                 </div>
-                                                                <div class="text m-comments-show">
-                                                                    {{comment.content}}
+                                                                <div class="text">
+                                                                    <p class="m-comments-show">{{tree[0].content}}</p>
                                                                 </div>
                                                                 <div class="actions">
-                                                                    <a class="reply" @click="reply(comment.id,comment.sendName,comment.sendId)">
-                                                                        <i class="ui icon comment"></i> 回复TA</a>
-                                                                    <a class="reply" v-if="comment.sendId == userInfo.loginUserID">
-                                                                        <i class="ui icon trash"></i> 删除</a>
-                                                                </div>
-                                                                </div>
-                                                            </div>
-                                                        </template>
-                                                        <!-- 父评论有子评论，先展示父评论，再从索引1处遍历展示所有子评论 -->
-                                                        <template v-else>
-                                                            <div class="comment">
-                                                                <a class="avatar">
-                                                                    <img :src="'images/avatar/'+tree[0].sendAvatar">
+                                                                    <a class="reply" @click="reply(tree[0].id,tree[0].sendName,tree[0].sendId)">
+                                                                        <i class="ui icon comment"></i> 回复TA
                                                                     </a>
-                                                                    <div class="content" style="margin-bottom: 5px;">
-                                                                    <a class="author">{{tree[0].sendName}}</a>
-                                                                    <div class="metadata">
-                                                                        <span class="date">{{tree[0].createTime}}</span>
-                                                                    </div>
-                                                                    <div class="text">
-                                                                        <p class="m-comments-show">{{tree[0].content}}</p>
-                                                                    </div>
-                                                                    <div class="actions">
-                                                                        <a class="reply" @click="reply(tree[0].id,tree[0].sendName,tree[0].sendId)">
-                                                                            <i class="ui icon comment"></i> 回复TA
-                                                                        </a>
-                                                                        <a class="reply" v-if="tree[0].sendId == userInfo.loginUserID">
-                                                                            <i class="ui icon trash"></i>  删除
-                                                                        </a>
-                                                                    </div>
-                                                                    </div>
-                                                                <div class="comments" style="padding-top:30px;">
-                                                                    <template v-for="(comment,index) in tree.slice(1, tree.length)" :key="comment.id">
-                                                                        <div class="comment" style="padding-top: 0;">
-                                                                            <a class="avatar">
-                                                                            <img :src="'/images/avatar/'+comment.sendAvatar">
-                                                                            </a>
-                                                                            <div class="content">
-                                                                            <a class="author">{{comment.sendName}}</a> 
-                                                                            <span style="color: #999;font-size: 0.8em;">&nbsp;回复&nbsp;</span> 
-                                                                            <a class="author">{{comment.receiveName}}</a>
-                                                                            <div class="metadata">
-                                                                                <span class="date">{{comment.createTime}}</span>
-                                                                            </div>
-                                                                            <div class="text m-comments-show">
-                                                                                {{comment.content}}
-                                                                            </div>
-                                                                            <div class="actions">
-                                                                                <a class="reply" @click="reply(comment.id,comment.sendName,comment.sendId)">回复TA</a>
-                                                                                <a class="reply" v-if="comment.sendId == userInfo.loginUserID">删除</a>
-                                                                            </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </template>
+                                                                    <a class="reply" v-if="tree[0].sendId == userInfo.loginUserID" @click="delComment()">
+                                                                        <i class="ui icon trash"></i>  删除
+                                                                    </a>
                                                                 </div>
+                                                                </div>
+                                                            <div class="comments" style="padding-top:30px;">
+                                                                <template v-for="(comment,index) in tree.slice(1, tree.length)" :key="comment.id">
+                                                                    <div class="comment" style="padding-top: 0;">
+                                                                        <a class="avatar">
+                                                                        <img :src="'/images/avatar/'+comment.sendAvatar">
+                                                                        </a>
+                                                                        <div class="content">
+                                                                        <a class="author">{{comment.sendName}}</a> 
+                                                                        <span style="color: #999;font-size: 0.8em;">&nbsp;回复&nbsp;</span> 
+                                                                        <a class="author">{{comment.receiveName}}</a>
+                                                                        <div class="metadata">
+                                                                            <span class="date">{{comment.createTime}}</span>
+                                                                        </div>
+                                                                        <div class="text m-comments-show">
+                                                                            {{comment.content}}
+                                                                        </div>
+                                                                        <div class="actions">
+                                                                            <a class="reply" @click="reply(comment.id,comment.sendName,comment.sendId)">回复TA</a>
+                                                                            <a class="reply" v-if="comment.sendId == userInfo.loginUserID" @click="delComment()">删除</a>
+                                                                        </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </template>
                                                             </div>
-                                                        </template>
+                                                        </div>
                                                     </template>
                                                 </template>
-                                            </div>
-                                            <p class="m-comments-over" v-if="isCommentsLoadOver">—————————— 已加载全部 ——————————</p>
+                                            </template>
                                         </div>
-                                        <div class="ui grey segment" style="margin-bottom: 0;padding-bottom:0;">
-                                            <div id="comment-form" class="ui form">
-                                                <input type="hidden" name="comParentId" value="-1">
-                                                <input type="hidden" name="bid" value="">
-                                                <div class="field">
-                                                    <textarea name="content" id="" cols="30" rows="4"  style="resize: none;" :placeholder="commentObj.replyName" v-model="commentObj.content"></textarea>
+                                        <p class="m-comments-over" v-if="isCommentsLoadOver">—————————— 已加载全部 ——————————</p>
+                                    </div>
+                                    <div class="ui grey segment" style="margin-bottom: 0;padding-bottom:0;">
+                                        <div id="comment-form" class="ui form">
+                                            <input type="hidden" name="comParentId" value="-1">
+                                            <input type="hidden" name="bid" value="">
+                                            <div class="field">
+                                                <textarea ref="inputVal" name="content" id="" cols="30" rows="4"  style="resize: none;" :placeholder="commentObj.replyName" v-model="commentObj.content"></textarea>
+                                            </div>
+                                            <div class="fields">
+                                                <div class="ui field right aligned">
+                                                    <button id="comment-submit-btn" type="button" class="ui tiny button" @click="getComments(article.bid)">更多评论</button>
                                                 </div>
-                                                <div class="fields">
-                                                    <div class="ui field right aligned">
-                                                        <button id="comment-submit-btn" type="button" class="ui tiny button" @click="getComments(article.bid)">更多评论</button>
-                                                    </div>
-                                                    <div class="ui field right aligned">
-                                                        <button id="comment-submit-btn" type="button" class="ui secondary tiny button" @click="writeComment()">写评论</button>
-                                                    </div>
-                                                    <p>
-                                                        <div class="ui mini input comment-content-capacity">
-                                                            <input type="text" disabled v-model="commentObj.maxLength">
-                                                            <input type="text" disabled v-model="commentObj.currentLength" style="padding-left: 0; width: auto; color: red;">
-                                                        </div>
-                                                    </p>
+                                                <div class="ui field right aligned">
+                                                    <button id="comment-submit-btn" type="button" class="ui secondary tiny button" @click="writeComment()">写评论</button>
                                                 </div>
+                                                <p>
+                                                    <div class="ui mini input comment-content-capacity">
+                                                        <input type="text" disabled v-model="commentObj.maxLength">
+                                                        <input type="text" disabled v-model="commentObj.currentLength" style="padding-left: 0; width: auto; color: red;">
+                                                    </div>
+                                                </p>
                                             </div>
                                         </div>
-                                    </template>
-                        
-                                    <!-- 留言用户信息卡片 -->
-                                    <!-- <div class="ui m-userInfo popup" style="padding: 0;border-radius: 10px;border: 1px solid #2a907adb;">
-                                        <img src="../static/images/userInfo_bg.png" th:src="@{/res/images/userInfo_bg.png}" style="width: inherit; height:45%;border-radius: 10px 10px 0 0;">
-                                        <div class="m-userInfo-cont">
-                                            <div class="">
-                                                <img src="../static/images/del_avatar2.jpg" class="m-userInfo-avatar" th:src="@{/res/images/del_avatar2.jpg}">
-                                            </div>
-                                            <div class="m-userInfo-info">
-                                                <h4><i class="icon user tiny grey"></i> <span class="m-nickname">mushroom</span></h4>
-                                                <p><i class="icon envelope square tiny grey"></i> <span class="m-mail">mushroom@qq.com</span></p>
-                                            </div>
+                                    </div>
+                                </template>
+                    
+                                <!-- 留言用户信息卡片 -->
+                                <!-- <div class="ui m-userInfo popup" style="padding: 0;border-radius: 10px;border: 1px solid #2a907adb;">
+                                    <img src="../static/images/userInfo_bg.png" th:src="@{/res/images/userInfo_bg.png}" style="width: inherit; height:45%;border-radius: 10px 10px 0 0;">
+                                    <div class="m-userInfo-cont">
+                                        <div class="">
+                                            <img src="../static/images/del_avatar2.jpg" class="m-userInfo-avatar" th:src="@{/res/images/del_avatar2.jpg}">
                                         </div>
-                                    </div> -->
-                                </div>
+                                        <div class="m-userInfo-info">
+                                            <h4><i class="icon user tiny grey"></i> <span class="m-nickname">mushroom</span></h4>
+                                            <p><i class="icon envelope square tiny grey"></i> <span class="m-mail">mushroom@qq.com</span></p>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
