@@ -692,9 +692,6 @@ const blogVue = new Vue({
       } else {
         this.goLogin()
       }
-      
-      // TODO 删除评论
-
     },
     /**
      * 回复评论
@@ -713,11 +710,39 @@ const blogVue = new Vue({
       this.commentObj.replyUserId = replyUserId
     },
     /**
-     * TODO
      * 删除评论
+     * @param {*} commentId 评论id
+     * @param {*} content  评论内容
+     * @returns 
      */
-    delComment() {
-      this.$message.info('TODO')
+    delComment(commentId,content) {
+
+      if (content === "<span style='color: #999;'>此评论已被删除</span>") {
+        return
+      }
+
+      axios({
+        method: 'delete',
+        url: baseUrl + '/v2/msg/commentDel/' + commentId,
+        headers: {token: this.userInfo.token}
+      }).then(res=>{
+        if (res.data.code == 200) {
+          this.$message.success('删除成功')
+          // 评论成功后从新加载评论
+          this.commentPageInfo = null
+          this.commentTrees = []
+          this.splitTrees = []
+          this.isCommentsLoadOver = false
+          this.commentObj.content = ''
+          this.getComments(this.article.bid)
+        } else if (res.data.code == 501) {
+          this.$message.info('删除失败,登录信息过期')
+        } else {
+          this.$message.error('删除失败')
+        }
+      }).catch(eroor=>{
+        this.$message.error('删除失败',eroor)
+      })
     }
   },
   watch: {

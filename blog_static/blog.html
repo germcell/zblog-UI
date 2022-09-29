@@ -30,7 +30,7 @@
                         <div class="right item m-item m-mobile-hide" style="height: 50px !important; margin-left: 12% !important">
                             <form class="ui form" method="get" target="_blank">
                                 <div class="ui icon input">
-                                    <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
+                                    <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="搜索你感兴趣的文章或用户" name="search" value="">
                                     <i class="search link icon"></i>
                                 </div>
                             </form>
@@ -220,10 +220,12 @@
                                                                 {{comment.content}}
                                                             </div>
                                                             <div class="actions">
-                                                                <a class="reply" @click="reply(comment.id,comment.sendName,comment.sendId)">
-                                                                    <i class="ui icon comment"></i> 回复TA</a>
-                                                                <a class="reply" v-if="comment.sendId == userInfo.loginUserID" @click="delComment()">
-                                                                    <i class="ui icon trash"></i> 删除</a>
+                                                                <a class="reply" v-if="comment.sendId == userInfo.loginUserID" @click="delComment(comment.id,comment.content)">
+                                                                    <i class="ui icon trash"></i> 删除
+                                                                </a>
+                                                                <a class="reply" v-else @click="reply(comment.id,comment.sendName,comment.sendId)">
+                                                                    <i class="ui icon comment"></i> 回复TA
+                                                                </a>
                                                             </div>
                                                             </div>
                                                         </div>
@@ -240,14 +242,16 @@
                                                                     <span class="date">{{tree[0].createTime}}</span>
                                                                 </div>
                                                                 <div class="text">
-                                                                    <p class="m-comments-show">{{tree[0].content}}</p>
+                                                                    <p class="m-comments-show" v-html="tree[0].content">
+                                                                        <!-- <span>{{tree[0].content}}</span> -->
+                                                                    </p>
                                                                 </div>
                                                                 <div class="actions">
-                                                                    <a class="reply" @click="reply(tree[0].id,tree[0].sendName,tree[0].sendId)">
-                                                                        <i class="ui icon comment"></i> 回复TA
-                                                                    </a>
-                                                                    <a class="reply" v-if="tree[0].sendId == userInfo.loginUserID" @click="delComment()">
+                                                                    <a class="reply" v-if="tree[0].sendId == userInfo.loginUserID" @click="delComment(tree[0].id,tree[0].content)">
                                                                         <i class="ui icon trash"></i>  删除
+                                                                    </a>
+                                                                    <a class="reply" v-else  @click="reply(tree[0].id,tree[0].sendName,tree[0].sendId)">
+                                                                        <i class="ui icon comment"></i> 回复TA
                                                                     </a>
                                                                 </div>
                                                                 </div>
@@ -264,12 +268,12 @@
                                                                         <div class="metadata">
                                                                             <span class="date">{{comment.createTime}}</span>
                                                                         </div>
-                                                                        <div class="text m-comments-show">
-                                                                            {{comment.content}}
+                                                                        <div class="text m-comments-show" v-html="comment.content">
+                                                                            <!-- {{comment.content}} -->
                                                                         </div>
                                                                         <div class="actions">
-                                                                            <a class="reply" @click="reply(comment.id,comment.sendName,comment.sendId)">回复TA</a>
-                                                                            <a class="reply" v-if="comment.sendId == userInfo.loginUserID" @click="delComment()">删除</a>
+                                                                            <a class="reply" v-if="comment.sendId == userInfo.loginUserID" @click="delComment(comment.id,comment.content)">删除</a>
+                                                                            <a class="reply" v-else @click="reply(comment.id,comment.sendName,comment.sendId)">回复TA</a>
                                                                         </div>
                                                                         </div>
                                                                     </div>
