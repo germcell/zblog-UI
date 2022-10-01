@@ -8,6 +8,8 @@ const loginVue = new Vue({
     },
     msg: "登录",
     backUrl: "",
+    loginWay: 'mail',  // 登录方式
+    obj: {}
   },
   created() {
     if (location.toString().includes("login.html")) {
@@ -19,6 +21,48 @@ const loginVue = new Vue({
     }
   },
   methods: {
+    /**
+     * 邮箱登录界面
+     */
+    goMailLogin() {
+      var wxQRBox = this.$refs.wxQRBox
+      wxQRBox.innerHTML = ''
+      this.loginWay = 'mail'
+    },
+    /**
+     * 微信登录界面
+     */
+    goWxLogin() {
+      this.loginWay = 'wechat'
+      axios.get('http://127.0.0.1:7860/v2/wx/login/getLoginParam')
+      .then(res=>{
+        this.obj = new WxLogin({
+          self_redirect: true,
+          id: 'wxQRBox',
+          appid: res.data.data.appid,
+          scope: res.data.data.scope,
+          redirect_uri: res.data.data.redirect_uri,
+          state: res.data.data.state,
+          style: 'black',
+          href: ''
+        })
+
+      var wxQRBox = this.$refs.wxQRBox
+      var wxIframe = wxQRBox.getElementsByTagName('iframe')[0]
+      wxIframe.setAttribute('width', '329px')
+      wxIframe.setAttribute('height', '320px')
+      })
+    },
+    /**
+     * 去首页
+     */
+    goIndexPage() {
+      location.href = 'index.html'
+    },
+    /**
+     * 登录
+     * @returns 
+     */
     async doLogin() {
       if (
         this.loginData.mail.trim().length == 0 ||
@@ -588,7 +632,7 @@ const blogVue = new Vue({
           })
 
         }).catch(error=>{
-          this.$message.error('获取留言失败',error)
+          this.$message.error('获取留言失败' + ' ' + error.message)
         })
       } else {
         axios.get(baseUrl + '/v2/msg/comments/' + bid, {params: {'p': 1}})
@@ -615,7 +659,7 @@ const blogVue = new Vue({
           })
 
         }).catch(error=>{
-          this.$message.error('获取留言失败',error)
+          this.$message.error('获取留言失败' + ' ' + error.message)
         })
       }
     },
@@ -687,7 +731,7 @@ const blogVue = new Vue({
             this.$message.error('评论失败,系统异常')
           }
         }).catch(error=>{
-          this.$message.error('评论失败',error)
+          this.$message.error('评论失败' + ' ' + error.message)
         })
       } else {
         this.goLogin()
@@ -1305,6 +1349,18 @@ const indexVue = new Vue({
     }
   },
   methods: {
+    /**
+     * 平台活动
+     */
+    platformAD() {
+      this.$message.info('developing...')
+    },
+    /**
+     * 分类页
+     */
+    goCategoryPage() {
+      location.href = 'category.html'
+    },
     // 换一换按钮，相当于做了一个分页操作
     changehot() {
       this.currentHotBlogPage++;

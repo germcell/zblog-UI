@@ -583,6 +583,7 @@ h3:hover {
  .ui.secondary.inverted.menu .dropdown.item:hover, .ui.secondary.inverted.menu .link.item:hover, .ui.secondary.inverted.menu a.item:hover {
      color: #222226 !important;
      background-color: rgb(229 229 229);
+     border-radius: unset !important;
  }
  .m-placeholder-bgc {
      background: #f4f5f6 !important;
@@ -606,10 +607,11 @@ h3:hover {
      border-radius: 0 !important;
  }
  .m-category:hover {
-     background-color: #216ad19c !important;
+     background-color: #a4f4993d!important;
+     color: white;
  }
  .m-category-active {
-     background-color: #216ad19c !important;
+     background-color: #a4f4993d !important;
  }
 
  /* 登录/注册/创作按钮 */
@@ -946,7 +948,9 @@ h3:hover {
 /* 导航选中状态 */
 .m-active-nav {
   font-weight: 700 !important;
-  background-color: #eeeeee !important;
+  /* background-color: #eeeeee !important; */
+  border-radius: unset !important;
+  border-bottom: 2px solid orangered !important;
 }
 
 /* 导航栏搜索位置 */
@@ -1363,3 +1367,9 @@ h3:hover {
   padding: 5px 0 2px 0;
   font-weight: 500;
 }
+
+
+.m-category-box .m-category-blog-content {
+  overflow-y: scroll;
+  height: 500px;
+} 

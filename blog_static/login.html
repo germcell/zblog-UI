@@ -20,31 +20,48 @@
   <img id="m-logo-z" src="./images/del/logo_w.png" alt="">
   <div id="login-container" class="m-login-content">
     <div class="m-login">
-      <h3>邮箱登录</h3> 
-      <p class="tips" style="top: 4.6rem;">{{msg}}</p>
-      <div class="m-login-up">
-        <el-input placeholder="邮箱地址" v-model="loginData.mail" clearable></el-input>
+      <div v-if="loginWay=='mail'">
+        <h3>邮箱登录</h3> 
+        <p class="tips" style="top: 4.6rem;">{{msg}}</p>
+        <div class="m-login-up">
+          <el-input placeholder="邮箱地址" v-model="loginData.mail" clearable></el-input>
+        </div>
+        <div class="m-login-up">
+          <el-input placeholder="密码" v-model="loginData.pwd" show-password maxlength="40"></el-input>
+        </div>
+        <div class="m-login-up" style="padding-top: 0;">
+          <a href="javascript:;" class="m-forgetpwd">忘记密码</a>
+        </div>
+        <div class="m-login-up">
+          <button class="m-login-btn" @click="doLogin"><span>登录</span></button>
+        </div>
+        <div class="m-login-up">
+          <a href="register.html">
+            <button class="m-register-btn"><span>注册</span></button>
+          </a>
+        </div>
+        <div class="m-login-look">
+          <el-tooltip content="微信登录" placement="bottom">
+              <el-button type="success" icon="el-icon-chat-round" circle size="mini" @click="goWxLogin()"></el-button>
+          </el-tooltip>
+          <el-tooltip content="免登录" placement="bottom" >
+            <el-button size="mini" round @click="goIndexPage()">去首页</el-button>
+          </el-tooltip>
+        </div>
       </div>
-      <div class="m-login-up">
-        <el-input placeholder="密码" v-model="loginData.pwd" show-password maxlength="40"></el-input>
-      </div>
-      <div class="m-login-up" style="padding-top: 0;">
-        <a href="javascript:;" class="m-forgetpwd">忘记密码</a>
-      </div>
-      <div class="m-login-up">
-        <button class="m-login-btn" @click="doLogin"><span>登录</span></button>
-      </div>
-      <div class="m-login-up">
-        <a href="register.html">
-          <button class="m-register-btn"><span>注册</span></button>
-        </a>
-      </div>
-      <div class="m-login-look">
-        <a href="index.html">先逛一逛</a>
+      <div v-else-if="loginWay=='wechat'">
+        <h3 style="margin-bottom: 0;">微信登录</h3> 
+        <div id="wxQRBox" ref="wxQRBox"></div>
+        <div class="m-login-look">
+          <el-row>
+            <el-button size="mini" round @click="goMailLogin()">返回</el-button>
+          </el-row>
+        </div>
       </div>
     </div>
   </div>
 
+  <script src="https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
   <script src="js/vue.min.js"></script>
   <script src="js/element-ui.js"></script>
   <script src="js/axios.min.js"></script>

@@ -83,3 +83,17 @@ const aliPayReq = (aliPayDTO, userToken) => {
 //     });
 //   }
 // },
+
+// function request(url,method,errorMsg) {
+//   if (method == 'get') {
+//     axios.get(url)
+//     .then(res=>{
+//       return 
+//     })
+//   } 
+
+//   if (method == 'post') {
+
+//   }
+
+// }

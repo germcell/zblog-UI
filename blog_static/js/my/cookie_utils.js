@@ -1,6 +1,8 @@
 /* 设置cookie */
 function setCookie(key, value) {
-  document.cookie = key + '=' + value
+  let now = new Date()
+  now.setDate(now.getDate() + 30)
+  document.cookie = key + '=' + value + ';expires=' + now.toUTCString()
 }
 
 /* 获取指定cookie */

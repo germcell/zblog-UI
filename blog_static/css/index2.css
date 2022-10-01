@@ -34,7 +34,8 @@
   position: absolute;
   top: 10%;
   right: 200px;
-  width: 26%;
+  /* width: 26%; */
+  width: 329px;
   /* height: 80%; */
   /* height: 240px; */
   background-color: #fff;
@@ -59,12 +60,7 @@
 }
 
 .m-login .m-login-look {
-  float: right;
-  margin-right: 10% ;
-  margin-top: 1em ;
-  margin-bottom: 4em ;
-  /* padding: 5% 0 0 75%;
-  width: 85%; */
+  margin: 1.5em 0 2em 1.7em;
 }
 
 .m-login .m-login-look a {

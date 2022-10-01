@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="favicon.ico" >
     <title>文章分类 - Z社区</title>
     <link rel="stylesheet" href="css/semantic.min.css">
+    <link rel="stylesheet" href="css/element-ui.css">
     <link rel="stylesheet" href="dist/components/icon.min.css">
     <link rel="stylesheet" href="css/index.css">
 </head>
@@ -19,21 +20,53 @@
                         <a href="index.html">
                             <img src="images/del/logo.png" class="m-logo" title="ZBLOG首页">
                         </a>
-                        <a href="javascript:void(0);" class="item m-item m-mobile-hide" th:classappend="${n==1} ? 'active'" th:href="@{/blog/index/}" title="最新发布的文章">最新发布</a>
-                        <a href="javascript:void(0);" class="item m-item m-mobile-hide" th:classappend="${n==2} ? 'active'" th:href="@{/blog/category/1/}" title="博文分类">分类</a>
-                        <div class="right item m-item m-mobile-hide" style="height: 50px !important;">
-                            <form class="ui form" method="get" target="_blank" action="" th:action="@{/blog/condition/page/1}">
+                        <a href="index.html" class="item m-item m-mobile-hide">首页</a>
+                        <a href="javascript:void(0);" class="item m-item m-mobile-hide m-active-nav" title="选择你感兴趣的文章类型">文章分类</a>
+                        <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="热门活动">本站活动</a>
+                        <div class="right item m-item m-mobile-hide" style="height: 50px !important; margin-left: 12% !important">
+                            <form class="ui form" method="get" target="_blank">
                                 <div class="ui icon input">
-                                    <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="" name="search" value="">
+                                    <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="搜索你感兴趣的文章或用户" name="search" value="">
                                     <i class="search link icon"></i>
                                 </div>
                             </form>
                         </div>
                         <div class="m-login-commd">
-                            <ul>
-                                <li><a href="login.html" class="m-login" title="登录">登录 / </a></li>
-                                <li><a href="register.html" class="m-register" title="去注册">注册</a></li>
-                                <li class="m-write-hover" title="记录你的日常、学习"><a class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                        <ul v-if="isLogin">
+                            <li style="margin-right: 7px;">
+                                <el-dropdown>
+                                    <a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" title="个人中心">
+                                        <el-avatar :size="35" :src="'images/avatar/'+userInfo.avatar"></el-avatar>
+                                    </a>
+                                    <el-dropdown-menu slot="dropdown">
+                                            <div class="m-login-userInfo"> 
+                                                <el-dropdown-item disabled>
+                                                    <span class="m-wn">
+                                                        {{userInfo.wName}}
+                                                        <i :class="[userInfo.isMale?'icon man':'icon woman']" :style="{'color':(userInfo.isMale?'skyblue':'#fe99ab')}"></i>
+                                                    </span>
+                                                    <p class="m-usermail">{{userInfo.userMail}}</p>
+                                                </el-dropdown-item>
+                                            </div> 
+                                            <div class="m-login-userInfo"> 
+                                                <el-dropdown-item disabled>
+                                                <ul class="m-af">
+                                                    <li>文章: {{userInfo.articleNum}}</li>
+                                                    <li>粉丝: {{userInfo.fans}}</li>
+                                                </ul> 
+                                                </el-dropdown-item>
+                                            </div>  
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                            </li>
+                            <li style="width: 4em;"><a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" style="color: black;">个人中心</a></li>
+                            <li @click="logout">/ 退出</li>
+                            <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
+                        </ul> 
+                            <ul class="m-no-login" v-else>
+                                <li><a href="login.html" class="m-login" title="登录">登录</a></li>
+                                <li><a href="register.html" class="m-register" title="去注册">/  注册</a></li>
+                                <li class="m-write-hover" title="开始记录吧"><a href="blog_add.html" class="m-write"><i class="icon write" style="color: #fff;"></i>写文章</a></li>
                             </ul>
                         </div>
                     </div>
@@ -45,7 +78,7 @@
         </div>
 
         <!-- 主体内容 -->
-        <div class="m-index-content" style="padding-bottom: 5em !important;">
+        <div class="m-index-content m-category-box" style="padding-bottom: 5em !important;">
             <!-- 分类数量 -->
             <div class="ui top blue attached segment" style="margin-bottom: 10px;">
                 <div class="ui two column grid">
@@ -53,7 +86,7 @@
                         <h3 class="ui blue header">文章类别</h3>
                     </div>
                     <div class="column right aligned">
-                        共 <span class="blogCount" th:text="${listCategories.size() != 0 ? listCategories.size() : 0}">14</span> 个分类
+                        共 <span class="blogCount">{{categories.length}}</span> 个分类
                     </div>
                 </div>
             </div>
@@ -62,39 +95,74 @@
                 <div class="four wide column">
                     <div class="ui segments" th:if="${listCategories.size() != 0}">
                         <!-- 分类信息显示模板 -->
-                        <a href="javascript:;">
+                        <template v-if="categories.length == 0">
                             <div class="ui segment m-category">
-                                <h4 class="ui image header">
-                                    <img src="images/category/java.jpg" class="ui large rounded image">
-                                    <div class="content"><span>Java</span>
-                                        <div class="sub header">共20篇文章</div>
-                                    </div>
-                                </h4>
+                                暂无分类信息
                             </div>
-                        </a>
-                        <a href="javascript:;">
-                            <div class="ui segment m-category">
-                                <h4 class="ui image header">
-                                    <img src="images/category/springboot.png" class="ui large rounded image">
-                                    <div class="content"> <span>SpringBoot</span> 
-                                        <div class="sub header">共10篇文章</div>
-                                    </div>
-                                </h4>
-                            </div>
-                        </a>
+                        </template>
+                        <template v-eles v-for="c in categories" :key="c.cid">
+                            <a href="javascript:;" @click="selectCategory(c.cid)">
+                                <div class="ui segment m-category" :class="{'m-category-active':c.cid==currentCategoryId}">
+                                    <h4 class="ui image header">
+                                        <img :src="'images/category/'+c.picture" class="ui mini rounded image">
+                                        <div class="content"><span>{{c.name}}</span>
+                                        </div>
+                                    </h4>
+                                </div>
+                            </a>
+                        </template>
                     </div>
                 </div>
                 <!-- 右边博客列表 -->
-                <div class="twelve wide column">
+                <div class="twelve wide column m-category-blog-content" ref="blogContent">
                     <div class="ui segments">
                         <div class="ui segment">
-                            <div class="ui mobile reversed stackable grid">
+                            <template v-if="showBlogs.length==0">
+                                暂无文章信息...
+                            </template>
+                            <template v-else v-for="(b,index) in showBlogs" :key="index">
+                                <div class="ui mobile reversed stackable grid">
+                                    <div class="twelve wide column">
+                                        <a :href="'blog.html?bid='+b.blogOutline.did+'&safasd='+Math.random()" target="_blank">
+                                            <h3 class="ui header">{{b.blogOutline.title}}</h3>
+                                        </a>
+                                        <p class="m-blogtext">{{b.blogOutline.outline}}</p>
+                                        <div class="ui mini m-infobox">
+                                            <div class="m-info">
+                                                <div class="m-avatar">
+                                                    <a href="#">
+                                                        <img :src="'images/avatar/'+b.writer.writerAvatar" class="ui avatar image" alt="">
+                                                        <span> {{b.writer.writerName}} </span>
+                                                    </a>
+                                                </div>
+                                                <div class="m-calendar">
+                                                    <i class="calendar icon"></i> <span>{{dateFormat(b.blogOutline.writeTime,true)}}</span>
+                                                </div>
+                                                <div class="m-eye">
+                                                    <i class="thumbs up icon"></i> <span>{{b.blogOutline.likeNum}}</span>
+                                                </div>
+                                                <div class="m-eye">
+                                                    <i class="eye icon"></i> <span>{{b.blogOutline.views}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="four wide column">
+                                        <a :href="'blog.html?bid='+b.blogOutline.did+'&safasd='+Math.random()" target="_blank">
+                                            <img :src="'images/fp/'+b.blogOutline.firstPicture" class="ui image rounded" alt="blogimg">
+                                        </a>
+                                    </div>
+                                </div>
+                                <hr style="border: 0.5px solid #99999933;margin: 1.5em 0;"/>
+                            </template>
+                            
+                            <!-- 测试数据 -->
+                            <!-- <div class="ui mobile reversed stackable grid">
                                 <div class="twelve wide column">
                                     <a href="#" target="_blank">
-                                        <h3 class="ui header">你真正的理解财富自由吗?</h3>
+                                        <h3 class="ui header">1你真正的理解财富自由吗?</h3>
                                     </a>
                                     <p class="m-blogtext">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的...</p>
-                                    <!-- 自定义flex布局 -->
                                     <div class="ui mini m-infobox">
                                         <div class="m-info">
                                             <div class="m-avatar">
@@ -121,6 +189,302 @@
                                     </a>
                                 </div>
                             </div>
+                            <div class="ui mobile reversed stackable grid">
+                                <div class="twelve wide column">
+                                    <a href="#" target="_blank">
+                                        <h3 class="ui header">2你真正的理解财富自由吗?</h3>
+                                    </a>
+                                    <p class="m-blogtext">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的...</p>
+                                    <div class="ui mini m-infobox">
+                                        <div class="m-info">
+                                            <div class="m-avatar">
+                                                <a href="#" target="_blank">
+                                                    <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="">
+                                                    <span> Marry </span>
+                                                </a>
+                                            </div>
+                                            <div class="m-calendar">
+                                                <i class="calendar icon"></i> <span>2022.2.18</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="thumbs up icon"></i> <span>2321</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="eye icon"></i> <span>232</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four wide column">
+                                    <a href="#" target="_blank">
+                                        <img src="./images/del/del_bj2.jpg" class="ui image rounded" alt="blogimg">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ui mobile reversed stackable grid">
+                                <div class="twelve wide column">
+                                    <a href="#" target="_blank">
+                                        <h3 class="ui header">3你真正的理解财富自由吗?</h3>
+                                    </a>
+                                    <p class="m-blogtext">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的...</p>
+                                     
+                                    <div class="ui mini m-infobox">
+                                        <div class="m-info">
+                                            <div class="m-avatar">
+                                                <a href="#" target="_blank">
+                                                    <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="">
+                                                    <span> Marry </span>
+                                                </a>
+                                            </div>
+                                            <div class="m-calendar">
+                                                <i class="calendar icon"></i> <span>2022.2.18</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="thumbs up icon"></i> <span>2321</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="eye icon"></i> <span>232</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four wide column">
+                                    <a href="#" target="_blank">
+                                        <img src="./images/del/del_bj2.jpg" class="ui image rounded" alt="blogimg">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ui mobile reversed stackable grid">
+                                <div class="twelve wide column">
+                                    <a href="#" target="_blank">
+                                        <h3 class="ui header">4你真正的理解财富自由吗?</h3>
+                                    </a>
+                                    <p class="m-blogtext">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的...</p>
+                                     
+                                    <div class="ui mini m-infobox">
+                                        <div class="m-info">
+                                            <div class="m-avatar">
+                                                <a href="#" target="_blank">
+                                                    <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="">
+                                                    <span> Marry </span>
+                                                </a>
+                                            </div>
+                                            <div class="m-calendar">
+                                                <i class="calendar icon"></i> <span>2022.2.18</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="thumbs up icon"></i> <span>2321</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="eye icon"></i> <span>232</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four wide column">
+                                    <a href="#" target="_blank">
+                                        <img src="./images/del/del_bj2.jpg" class="ui image rounded" alt="blogimg">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ui mobile reversed stackable grid">
+                                <div class="twelve wide column">
+                                    <a href="#" target="_blank">
+                                        <h3 class="ui header">5你真正的理解财富自由吗?</h3>
+                                    </a>
+                                    <p class="m-blogtext">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的...</p>
+                                     
+                                    <div class="ui mini m-infobox">
+                                        <div class="m-info">
+                                            <div class="m-avatar">
+                                                <a href="#" target="_blank">
+                                                    <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="">
+                                                    <span> Marry </span>
+                                                </a>
+                                            </div>
+                                            <div class="m-calendar">
+                                                <i class="calendar icon"></i> <span>2022.2.18</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="thumbs up icon"></i> <span>2321</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="eye icon"></i> <span>232</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four wide column">
+                                    <a href="#" target="_blank">
+                                        <img src="./images/del/del_bj2.jpg" class="ui image rounded" alt="blogimg">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ui mobile reversed stackable grid">
+                                <div class="twelve wide column">
+                                    <a href="#" target="_blank">
+                                        <h3 class="ui header">6你真正的理解财富自由吗?</h3>
+                                    </a>
+                                    <p class="m-blogtext">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的...</p>
+                                     
+                                    <div class="ui mini m-infobox">
+                                        <div class="m-info">
+                                            <div class="m-avatar">
+                                                <a href="#" target="_blank">
+                                                    <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="">
+                                                    <span> Marry </span>
+                                                </a>
+                                            </div>
+                                            <div class="m-calendar">
+                                                <i class="calendar icon"></i> <span>2022.2.18</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="thumbs up icon"></i> <span>2321</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="eye icon"></i> <span>232</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four wide column">
+                                    <a href="#" target="_blank">
+                                        <img src="./images/del/del_bj2.jpg" class="ui image rounded" alt="blogimg">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ui mobile reversed stackable grid">
+                                <div class="twelve wide column">
+                                    <a href="#" target="_blank">
+                                        <h3 class="ui header">7你真正的理解财富自由吗?</h3>
+                                    </a>
+                                    <p class="m-blogtext">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的...</p>
+                                     
+                                    <div class="ui mini m-infobox">
+                                        <div class="m-info">
+                                            <div class="m-avatar">
+                                                <a href="#" target="_blank">
+                                                    <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="">
+                                                    <span> Marry </span>
+                                                </a>
+                                            </div>
+                                            <div class="m-calendar">
+                                                <i class="calendar icon"></i> <span>2022.2.18</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="thumbs up icon"></i> <span>2321</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="eye icon"></i> <span>232</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four wide column">
+                                    <a href="#" target="_blank">
+                                        <img src="./images/del/del_bj2.jpg" class="ui image rounded" alt="blogimg">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ui mobile reversed stackable grid">
+                                <div class="twelve wide column">
+                                    <a href="#" target="_blank">
+                                        <h3 class="ui header">8你真正的理解财富自由吗?</h3>
+                                    </a>
+                                    <p class="m-blogtext">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的...</p>
+                                     
+                                    <div class="ui mini m-infobox">
+                                        <div class="m-info">
+                                            <div class="m-avatar">
+                                                <a href="#" target="_blank">
+                                                    <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="">
+                                                    <span> Marry </span>
+                                                </a>
+                                            </div>
+                                            <div class="m-calendar">
+                                                <i class="calendar icon"></i> <span>2022.2.18</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="thumbs up icon"></i> <span>2321</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="eye icon"></i> <span>232</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four wide column">
+                                    <a href="#" target="_blank">
+                                        <img src="./images/del/del_bj2.jpg" class="ui image rounded" alt="blogimg">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ui mobile reversed stackable grid">
+                                <div class="twelve wide column">
+                                    <a href="#" target="_blank">
+                                        <h3 class="ui header">9你真正的理解财富自由吗?</h3>
+                                    </a>
+                                    <p class="m-blogtext">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的...</p>
+                                     
+                                    <div class="ui mini m-infobox">
+                                        <div class="m-info">
+                                            <div class="m-avatar">
+                                                <a href="#" target="_blank">
+                                                    <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="">
+                                                    <span> Marry </span>
+                                                </a>
+                                            </div>
+                                            <div class="m-calendar">
+                                                <i class="calendar icon"></i> <span>2022.2.18</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="thumbs up icon"></i> <span>2321</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="eye icon"></i> <span>232</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four wide column">
+                                    <a href="#" target="_blank">
+                                        <img src="./images/del/del_bj2.jpg" class="ui image rounded" alt="blogimg">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ui mobile reversed stackable grid">
+                                <div class="twelve wide column">
+                                    <a href="#" target="_blank">
+                                        <h3 class="ui header">10你真正的理解财富自由吗?</h3>
+                                    </a>
+                                    <p class="m-blogtext">冬奥会赛程过半，多项纪录诞生。精彩瞬间，见证了运动员的非凡表现，展现了竞技体育的巨大魅力。金牌荣耀，来自赛场上的...</p>
+                                     
+                                    <div class="ui mini m-infobox">
+                                        <div class="m-info">
+                                            <div class="m-avatar">
+                                                <a href="#" target="_blank">
+                                                    <img src="https://picsum.photos/id/1012/100/100" class="ui avatar image" alt="">
+                                                    <span> Marry </span>
+                                                </a>
+                                            </div>
+                                            <div class="m-calendar">
+                                                <i class="calendar icon"></i> <span>2022.2.18</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="thumbs up icon"></i> <span>2321</span>
+                                            </div>
+                                            <div class="m-eye">
+                                                <i class="eye icon"></i> <span>232</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="four wide column">
+                                    <a href="#" target="_blank">
+                                        <img src="./images/del/del_bj2.jpg" class="ui image rounded" alt="blogimg">
+                                    </a>
+                                </div>
+                            </div> -->
                         </div>
                         <!-- TODO 需添加分页 -->
                     </div>
@@ -140,29 +504,35 @@
                     </div>
                     <div class="three wide column">
                         <h4 class="ui inverted header">联系我</h4>
-                        <p class="copyright">Gitee : germcell</p>
-                        <p class="copyright right aligned">WeChat : z_Cricket</p>
+                        <p class="copyright"></p>
+                        <p class="copyright right aligned"></p>
                     </div>
                     <div class="three wide column">
                         <h4 class="ui inverted header">本站声明</h4>
-                        <p class="copyright">SpringBoot入门学习，记录开发过程中遇到的bug，问题，以及解决的方法，都会以博客的形式记录在此站</p>
+                        <p class="copyright"</p>
                     </div>
                     <div class="seven wide column">
                         <h4 class="ui inverted header">开发日志</h4>
-                        <p class="copyright">1.xxxxxxxx</p>
+                        <p class="copyright"></p>
                     </div>
                 </div>
                 <div class="ui inverted section divider"></div>
                 <p class="copyright">Copyright &copy; 2022</p>
-                <p class="copyright">https://gitee.com/germcell/blog.git</p>
-            </div>
+                <p class="copyright">
         </footer>
     </div>
 
 <!-- ---------------- js ---------------------------------------------------------------------------------- -->
+    <script src="js/vue.min.js"></script>   
+    <script src="js/element-ui.js"></script>
+    <script src="js/my/cookie_utils.js"></script>   
+    <script src="js/my/base.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/my/two.js"></script>   
     <script src="js/jquery.min.js"></script>
     <script src="js/semantic.min.js"></script>
     <script src="js/front.js"></script>
+    <script src="js/my/three.js"></script>
 
     <script type="text/javascript">
         $(function () {
@@ -172,7 +542,6 @@
                 // var categoryCid = $('#categoryContent').data('categorycid');
                 // FIXME 当分类下无内容时，获取不到博客分类id，导致不能添加选中样式
                 var blogCid = $('#blogContent').data('blogcid');
-                console.log($('.m-categoryContent'))
                 $('.m-categoryContent').each(function (i, ele) {
                     if ($(ele).data('categorycid') == blogCid) {
                         $(ele).addClass('m-category-active');
