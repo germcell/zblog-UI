@@ -10,7 +10,8 @@ const categoryVue = new Vue({
     blogBoxScrollCapacity: 150, // 博客展示区域，滚动阈值随着页数增多，动态的变化
     blogBoxWidth: 500, // 博客展示区域固定宽度，与css属性绑定，修改时也需要修改css .m-category-box .m-category-blog-content
     page: 1, // 根据阈值查询的当前页码
-    scrollEvent: true // 是否开启滚动监听事件，所有文章加载完后则需要关闭
+    scrollEvent: true, // 是否开启滚动监听事件，所有文章加载完后则需要关闭
+    unreadNum: 0 // 未读消息
   },
   created() {
     // 加载登录信息
@@ -23,6 +24,7 @@ const categoryVue = new Vue({
     .then(res=>{
       if (res.data.code == 522) {
         this.isLogin = true
+        this.unreadNum = Number.parseInt(sessionStorage.getItem('unreadNum'))
       }
     })
 
@@ -47,6 +49,13 @@ const categoryVue = new Vue({
     this.$refs.blogContent.addEventListener('scroll',this.handleScroll)
   },
   methods: {
+    /**
+   * 前往用户中心
+   * @param {*} uid 
+   */
+    goUserCenter(uid) {
+      location.href = 'private_personal.html?uid='+uid+'&m='+Math.random()
+    },
     /**
      * 选择当前分类
      * @param {*} cid 

@@ -365,7 +365,7 @@ h3:hover {
     -webkit-line-clamp: 2;
     overflow: hidden;
     line-height: 1.5em;
-    color: #999;
+    color: rgb(101 91 91);
    /*-webkit-line-clamp用来限制在一个块元素显示的文本的行数。 为了实现该效果，它需要组合其他的WebKit属性。常见结合属性：
    display: -webkit-box; 必须结合的属性 ，将对象作为弹性伸缩盒子模型显示 。
    -webkit-box-orient 必须结合的属性 ，设置或检索伸缩盒对象的子元素的排列方式 。*/
@@ -379,7 +379,7 @@ h3:hover {
   -webkit-line-clamp: 4;
   overflow: hidden;
   line-height: 1.5em;
-  color: #999;
+  color: rgb(101 91 91);
  }
 
  .m-overflow-ad-title{
@@ -528,6 +528,13 @@ h3:hover {
      z-index: 222;
      width: 100% !important;
 }
+
+.nav-flexed .m-msg-unread {
+  margin-top: -2px;
+  /* margin-right: 40px; */
+  /* padding: 0; */
+}
+
  /* 强制更改editormd图片上传框的样式 */
  .editormd-form input[type="text"] {
      display: inline-block;
@@ -636,8 +643,13 @@ h3:hover {
  }
 
  .m-login-commd {
-   margin: auto 3em;
+   /* margin: auto 3em; */
+   margin: auto auto 0.6em 1em;
  }
+
+ .el-badge__content.is-fixed {
+  top: 8px;
+}
 
  .m-login-commd ul {
    margin: 0;

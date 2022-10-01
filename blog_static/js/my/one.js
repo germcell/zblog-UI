@@ -1350,6 +1350,13 @@ const indexVue = new Vue({
   },
   methods: {
     /**
+     * 前往用户中心
+     * @param {*} uid 
+     */
+    goUserCenter(uid) {
+      location.href = 'private_personal.html?uid='+uid+'&m='+Math.random()
+    },
+    /**
      * 平台活动
      */
     platformAD() {
@@ -1360,6 +1367,7 @@ const indexVue = new Vue({
      */
     goCategoryPage() {
       location.href = 'category.html'
+      sessionStorage.setItem('unreadNum', this.unreadNum)
     },
     // 换一换按钮，相当于做了一个分页操作
     changehot() {

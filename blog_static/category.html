@@ -23,7 +23,7 @@
                         <a href="index.html" class="item m-item m-mobile-hide">首页</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide m-active-nav" title="选择你感兴趣的文章类型">文章分类</a>
                         <a href="javascript:void(0);" class="item m-item m-mobile-hide" title="热门活动">本站活动</a>
-                        <div class="right item m-item m-mobile-hide" style="height: 50px !important; margin-left: 12% !important">
+                        <div class="right item m-item m-mobile-hide" style="height: 50px !important; margin-left: 5% !important">
                             <form class="ui form" method="get" target="_blank">
                                 <div class="ui icon input">
                                     <input id="search_input" type="text" class="m-placeholder-bgc m-search-box" placeholder="搜索你感兴趣的文章或用户" name="search" value="">
@@ -31,11 +31,21 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="m-login-commd">
+                        <div class="m-login-commd" style="display: flex;">
+                        <ul v-if="isLogin" style="margin-right: 3em;">
+                            <li>
+                                <el-badge :value="100" :max="10" class="m-msg-unread" v-if="unreadNum==0" hidden>
+                                    <el-button size="small" icon="el-icon-message" type="primary" plain></el-button>
+                                </el-badge>
+                                <el-badge :value="unreadNum" :max="10" class="m-msg-unread" v-else >
+                                    <el-button size="small" icon="el-icon-message" type="danger" plain @click="goUserCenter(userInfo.loginUserID)"></el-button>
+                                </el-badge>
+                            </li>
+                        </ul>
                         <ul v-if="isLogin">
                             <li style="margin-right: 7px;">
                                 <el-dropdown>
-                                    <a :href="'private_personal.html?uid='+userInfo.loginUserID+'&m='+Math.random()" title="个人中心">
+                                    <a href="#" title="个人中心" @click="goUserCenter(userInfo.loginUserID)">
                                         <el-avatar :size="35" :src="'images/avatar/'+userInfo.avatar"></el-avatar>
                                     </a>
                                     <el-dropdown-menu slot="dropdown">
