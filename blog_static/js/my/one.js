@@ -904,6 +904,13 @@ const ppVue = new Vue({
     }
   },
   methods: {
+    /**
+     * 分类页
+     */
+    goCategoryPage() {
+      location.href = 'category.html'
+      sessionStorage.setItem('unreadNum', this.unreadNum)
+    },
     /* 预览上传头像 */
     showUploadAvatar() {
       const files = this.$refs.uploadAvatar.files;

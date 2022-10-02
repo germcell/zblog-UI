@@ -31,6 +31,13 @@ const messageVue = new Vue({
     this.connectionWSServer()
   },
   methods: {
+     /**
+     * 分类页
+     */
+      goCategoryPage() {
+        location.href = 'category.html'
+        sessionStorage.setItem('unreadNum', this.unreadNum)
+      },
     /**
      * 请求私信用户列表数据，并合并未读消息数据,将每个私信用户和私信数量整合在一起
      */
@@ -170,9 +177,25 @@ const messageVue = new Vue({
       var msgDTO
       var webSocket = new WebSocket(wsUrl + '/v2/msg/ws/' + this.userInfo.loginUserID)
       this.ws = webSocket
-      this.ws.onerror = ()=>{ this.$message.error('网络异常，建立连接失败') }
+
+      this.ws.onerror = ()=>{ 
+        this.$notify({
+          title: "消息中心",
+          message: "网络异常，建立连接失败",
+          type: "error",
+          offset: 50,
+          duration: 3000,
+        })
+      }
+
       this.ws.onopen = ()=>{
-        this.$message.success('连接成功')
+        this.$notify({
+          title: "消息中心",
+          message: "连接成功",
+          type: "success",
+          offset: 50,
+          duration: 3000,
+        })
       }
        // 实时监听回显/推送消息
        this.ws.onmessage = (evt) => {

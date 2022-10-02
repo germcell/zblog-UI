@@ -104,7 +104,7 @@ h3:hover {
 }
 
  .m-index-content {
-     padding: 5em 5em 5em 5em !important;
+     padding: 5em 6em 5em 6em !important;
      background-image: url("../images/del/del_bj.png");
  }
 
@@ -394,7 +394,7 @@ h3:hover {
  /* 文章标题太多时隐藏一部分 */
  .m-overflow-blog-title{
      width: 410px;
-     height: 50px;
+     height: 35px;
      overflow:hidden;
      text-overflow:ellipsis;
      display: -webkit-box;

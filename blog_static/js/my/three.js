@@ -7,7 +7,7 @@ const categoryVue = new Vue({
     currentCategoryId: null, // 当前选中分类
     pageInfo: {}, // 当前分类文章分页信息
     showBlogs: [], // 当前已展示的文章概要
-    blogBoxScrollCapacity: 150, // 博客展示区域，滚动阈值随着页数增多，动态的变化
+    blogBoxScrollCapacity: 310, // 博客展示区域，滚动阈值随着页数增多，动态的变化
     blogBoxWidth: 500, // 博客展示区域固定宽度，与css属性绑定，修改时也需要修改css .m-category-box .m-category-blog-content
     page: 1, // 根据阈值查询的当前页码
     scrollEvent: true, // 是否开启滚动监听事件，所有文章加载完后则需要关闭
