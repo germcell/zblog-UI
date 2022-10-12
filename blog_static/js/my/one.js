@@ -247,7 +247,13 @@ const registerVue = new Vue({
           if (result) {
             axios.get(baseUrl + "/v2/lr/code", {
               params: { mail: this.registerData.mail },
-            });
+            }).then((res) => {
+              if (res.data.code != 612) {
+                this.$message.eroor('邮件发送失败,请稍后重试')
+                return
+              }
+            })
+
             this.enableRegister = false;
             let t = 60;
             const codeMsgTimer = setInterval(() => {
