@@ -1791,6 +1791,8 @@ const baVue = new Vue({
             "&mfsadf=" +
             Math.random();
         }
+      } else if (res.code == 501) {
+        this.$message.info("提交失败，登录信息过期，请复制已编辑内容后刷新页面");
       }
       return;
     },

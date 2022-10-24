@@ -11,7 +11,8 @@ const categoryVue = new Vue({
     blogBoxWidth: 500, // 博客展示区域固定宽度，与css属性绑定，修改时也需要修改css .m-category-box .m-category-blog-content
     page: 1, // 根据阈值查询的当前页码
     scrollEvent: true, // 是否开启滚动监听事件，所有文章加载完后则需要关闭
-    unreadNum: 0 // 未读消息
+    unreadNum: 0, // 未读消息,
+    blogLoadding: false, // 分类文章信息加载状态，true正在加载，false加载完成
   },
   created() {
     // 加载登录信息
@@ -78,10 +79,16 @@ const categoryVue = new Vue({
 
       var scrollTop = this.$refs.blogContent.scrollTop
       if (scrollTop / this.blogBoxScrollCapacity > 1) {
+        this.blogLoadding = true
         // console.log('查询下一页',scrollTop,this.page,this.blogBoxScrollCapacity);
         this.blogBoxScrollCapacity += this.blogBoxWidth
         this.page++
-        this.pageBlogByCid(this.currentCategoryId, this.page)
+
+        const t = setInterval(() => {
+          this.pageBlogByCid(this.currentCategoryId, this.page)
+          clearInterval(t)
+          this.blogLoadding = false
+        }, 1000)
         return
       }
       // console.log('不需要查询下一页',scrollTop,this.page,this.blogBoxScrollCapacity);

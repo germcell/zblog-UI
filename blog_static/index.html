@@ -34,7 +34,7 @@
                            <ul v-if="isLogin" style="margin-right: 2em;">
                                 <li>
                                     <el-badge :value="100" :max="10" class="m-msg-unread" v-if="unreadNum==0" hidden>
-                                        <el-button size="small" icon="el-icon-message" type="primary" plain></el-button>
+                                        <el-button size="small" icon="el-icon-message" type="primary" plain @click="goUserCenter(loginUserID)"></el-button>
                                     </el-badge>
                                     <el-badge :value="unreadNum" :max="10" class="m-msg-unread" v-else >
                                         <el-button size="small" icon="el-icon-message" type="danger" plain @click="goUserCenter(loginUserID)"></el-button>
